@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://script.google.com https://script.googleusercontent.com https://fonts.googleapis.com https://fonts.gstatic.com;">
 <title>Rossell Creations — Custom Apparel, Engraving & 3D Printing</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -701,21 +702,48 @@ function addPrint(){
 }
 
 // ── BACKEND ───────────────────────────────────────────────
-const SCRIPT_URL = localStorage.getItem('rc_script_url') || '';
+// Google Apps Script blocks fetch() from GitHub Pages due to CORS + redirects.
+// Solution: encode the payload as a URL param and use JSONP (script tag injection).
+// The Apps Script doGet reads it as action=submit_order&data=<encoded JSON>.
+
+function getScriptUrl() {
+  return localStorage.getItem('rc_script_url') || '';
+}
+
+function jsonpPost(payload) {
+  return new Promise((resolve) => {
+    const url = getScriptUrl();
+    if (!url) { resolve(null); return; }
+
+    const cbName = 'rc_post_cb_' + Date.now();
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      if (script.parentNode) script.remove();
+      resolve(null); // fail silently — order still goes to Square
+    }, 10000);
+
+    window[cbName] = (data) => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.remove();
+      resolve(data);
+    };
+
+    const script = document.createElement('script');
+    script.src = `${url}?action=submit&data=${encoded}&callback=${cbName}`;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      resolve(null);
+    };
+    document.head.appendChild(script);
+  });
+}
 
 async function postToBackend(payload) {
-  if (!SCRIPT_URL) return null;
-  try {
-    const resp = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'text/plain' }, // GAS requires text/plain for doPost
-    });
-    return await resp.json();
-  } catch(e) {
-    console.warn('Backend post failed:', e.message);
-    return null;
-  }
+  return await jsonpPost(payload);
 }
 
 // ── CART
