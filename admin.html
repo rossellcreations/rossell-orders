@@ -29,7 +29,7 @@ body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);min
 
 /* LAYOUT */
 .app{display:none}
-sidebar{width:220px;background:var(--navy);height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100}
+.sidebar-nav{width:220px;background:var(--navy);height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100}
 .sb-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-logo-icon{font-size:1.4rem;color:var(--gold)}
 .sb-logo-text{font-family:'Cinzel',serif;color:white;font-size:.9rem;letter-spacing:.08em}
@@ -146,7 +146,7 @@ tr:hover td{background:var(--cream)}
 .admin-section{display:none}.admin-section.active{display:block}
 
 @media(max-width:768px){
-  sidebar{width:60px}
+  .sidebar-nav{width:60px}
   .sb-logo-text,.sb-logo-sub,.sb-item span:not(.sb-icon),.sb-section,.sb-store-btn{display:none}
   .sb-item{padding:.8rem;justify-content:center}
   .main{margin-left:60px;padding:1rem}
@@ -169,8 +169,8 @@ tr:hover td{background:var(--cream)}
 </div>
 
 <!-- APP -->
-<div class="app" id="app">
-<sidebar>
+<div class="app" id="app" style="display:none">
+<div class="sidebar-nav">
   <div class="sb-logo">
     <div class="sb-logo-icon">✿</div>
     <div class="sb-logo-text">RC Admin</div>
@@ -191,7 +191,7 @@ tr:hover td{background:var(--cream)}
   <div class="sb-footer">
     <a class="sb-store-btn" href="index.html" target="_blank">View Store →</a>
   </div>
-</sidebar>
+</div>
 
 <div class="main">
 
@@ -497,15 +497,18 @@ tr:hover td{background:var(--cream)}
 <script>
 // ── AUTH ──────────────────────────────────────────────────
 const DEFAULT_PASS = 'rossell2024';
+
 function doLogin() {
-  const pass = document.getElementById('login-pass').value;
+  const pass = document.getElementById('login-pass').value.trim();
   const stored = localStorage.getItem('rc_admin_pass') || DEFAULT_PASS;
   if (pass === stored) {
     document.getElementById('login-wrap').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.display = 'block';
     init();
   } else {
     document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
   }
 }
 function changePassword() {
