@@ -659,7 +659,7 @@ function updateDashStats() {
       <tbody>${recent.map(o=>`<tr>
         <td><strong>${o['Order #']||'—'}</strong></td>
         <td>${o['Customer Name']||'—'}</td>
-        <td><strong>$${parseFloat(o['Total ($)')||0).toFixed(2)}</strong></td>
+        <td><strong>$${(parseFloat(o['Total ($)'])||0).toFixed(2)}</strong></td>
         <td><span class="badge ${(o['Payment Status']||'').includes('Paid')?'badge-paid':'badge-pending'}">${o['Payment Status']||'Pending'}</span></td>
         <td>${o.Date||'—'}</td>
       </tr>`).join('')}</tbody>
@@ -939,7 +939,7 @@ function renderOrderTable() {
       <td>${o.Date||'—'}</td>
       <td>${o['Customer Name']||'—'}<br><span style="font-size:.7rem;color:var(--gray)">${o['Customer Email']||''}</span></td>
       <td style="max-width:200px;font-size:.75rem;color:var(--gray)">${(o['Items Summary']||'').slice(0,80)}${(o['Items Summary']||'').length>80?'…':''}</td>
-      <td><strong>$${parseFloat(o['Total ($)')||0).toFixed(2)}</strong></td>
+      <td><strong>$${(parseFloat(o['Total ($)'])||0).toFixed(2)}</strong></td>
       <td><span class="badge ${(o['Payment Status']||'').includes('Paid')?'badge-paid':'badge-pending'}">${o['Payment Status']||'Pending'}</span></td>
       <td>${o['Created?']?'✅':'⬜'}</td>
       <td>${o['Delivered?']?'✅':'⬜'}</td>
