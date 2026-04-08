@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rossell Creations — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A2E4A;--gold:#C9A84C;--gold-lt:#E8D5A3;
+  --cream:#FAF7F2;--white:#FFFFFF;--text:#2C2416;
+  --gray:#8A8279;--lgray:#F0EDE8;--teal:#2A7F7F;
+  --green:#2E7D32;--red:#C62828;--shadow:0 4px 20px rgba(26,46,74,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:grid;place-items:center;background:var(--navy)}
+.login-box{background:white;border-radius:20px;padding:2.5rem;width:min(380px,90%);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{font-size:2rem;color:var(--gold);margin-bottom:.5rem}
+.login-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--navy);letter-spacing:.1em;margin-bottom:.25rem}
+.login-sub{font-size:.8rem;color:var(--gray);margin-bottom:1.75rem}
+.login-input{width:100%;padding:.75rem 1rem;border:1.5px solid var(--lgray);border-radius:10px;font-family:'Jost',sans-serif;font-size:.95rem;margin-bottom:.75rem;background:var(--cream)}
+.login-input:focus{outline:none;border-color:var(--navy)}
+.login-btn{width:100%;padding:.8rem;background:var(--navy);color:white;border:none;border-radius:10px;font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.1em;cursor:pointer;transition:all .2s}
+.login-btn:hover{background:#243d62}
+.login-err{color:var(--red);font-size:.8rem;margin-top:.5rem;display:none}
+
+/* LAYOUT */
+.app{display:none}
+sidebar{width:220px;background:var(--navy);height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo-icon{font-size:1.4rem;color:var(--gold)}
+.sb-logo-text{font-family:'Cinzel',serif;color:white;font-size:.9rem;letter-spacing:.08em}
+.sb-logo-sub{color:var(--gold);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;font-weight:300}
+.sb-nav{flex:1;padding:.75rem 0;overflow-y:auto}
+.sb-item{display:flex;align-items:center;gap:.65rem;padding:.7rem 1.25rem;cursor:pointer;color:rgba(255,255,255,.6);font-size:.83rem;font-weight:500;transition:all .2s;border-left:3px solid transparent}
+.sb-item:hover{background:rgba(255,255,255,.05);color:white}
+.sb-item.active{background:rgba(201,168,76,.1);color:var(--gold);border-left-color:var(--gold)}
+.sb-item .sb-icon{font-size:1rem;width:20px;text-align:center}
+.sb-section{padding:.5rem 1.25rem .25rem;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600}
+.sb-footer{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.1)}
+.sb-store-btn{display:block;text-align:center;background:var(--gold);color:var(--navy);padding:.5rem;border-radius:8px;font-size:.78rem;font-weight:700;text-decoration:none;font-family:'Jost',sans-serif;transition:all .2s}
+.sb-store-btn:hover{background:var(--gold-lt)}
+
+.main{margin-left:220px;padding:1.5rem;min-height:100vh}
+.page-header{margin-bottom:1.5rem}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;color:var(--navy)}
+.page-sub{font-size:.83rem;color:var(--gray);margin-top:.2rem}
+
+/* CARDS */
+.card{background:white;border-radius:14px;box-shadow:var(--shadow);padding:1.4rem;margin-bottom:1.25rem}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--navy);margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.25rem}
+.stat{background:white;border-radius:12px;padding:1rem 1.1rem;box-shadow:var(--shadow);border-left:4px solid var(--gold)}
+.stat.g{border-left-color:var(--green)}.stat.r{border-left-color:var(--red)}.stat.t{border-left-color:var(--teal)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--navy);line-height:1}
+.stat-label{font-size:.75rem;color:var(--gray);margin-top:.2rem;font-weight:500}
+
+/* TABS */
+.tab-bar{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab-btn{padding:.45rem 1rem;border:1.5px solid var(--lgray);border-radius:20px;background:transparent;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--gray);font-family:'Jost',sans-serif;transition:all .2s}
+.tab-btn.active{background:var(--navy);border-color:var(--navy);color:white}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.85rem}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group.full{grid-column:1/-1}
+.fl{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.fi{width:100%;padding:.55rem .8rem;border:1.5px solid var(--lgray);border-radius:8px;font-family:'Jost',sans-serif;font-size:.87rem;background:var(--cream);color:var(--text);transition:border .15s}
+.fi:focus{outline:none;border-color:var(--navy);background:white}
+.fi-sm{max-width:120px}
+textarea.fi{min-height:75px;resize:vertical}
+
+/* BUTTONS */
+.btn{padding:.55rem 1.1rem;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:.35rem}
+.btn-primary{background:var(--navy);color:white}.btn-primary:hover{background:#243d62}
+.btn-gold{background:var(--gold);color:var(--navy)}.btn-gold:hover{background:var(--gold-lt)}
+.btn-ghost{background:transparent;color:var(--navy);border:1.5px solid var(--lgray)}.btn-ghost:hover{background:var(--lgray)}
+.btn-danger{background:var(--red);color:white}.btn-danger:hover{background:#b71c1c}
+.btn-success{background:var(--green);color:white}
+.btn-sm{padding:.3rem .65rem;font-size:.75rem;border-radius:6px}
+.btn-row{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1rem}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border-radius:10px;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;background:white;font-size:.82rem;min-width:600px}
+thead{background:var(--navy);color:white}
+th{padding:.65rem .9rem;text-align:left;font-weight:600;font-size:.75rem;letter-spacing:.04em;white-space:nowrap}
+td{padding:.65rem .9rem;border-bottom:1px solid var(--lgray);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--cream)}
+.badge{display:inline-block;padding:.18rem .5rem;border-radius:5px;font-size:.72rem;font-weight:600}
+.badge-active{background:#E8F5E9;color:var(--green)}
+.badge-inactive{background:#FFEBEE;color:var(--red)}
+.badge-new{background:#E3F2FD;color:#1565C0}
+.badge-paid{background:#E8F5E9;color:var(--green)}
+.badge-pending{background:#FFF8E1;color:#E65100}
+
+/* DESIGN GRID */
+.design-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.85rem}
+.design-admin-card{background:white;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1.5px solid var(--lgray)}
+.dac-img{aspect-ratio:1;background:var(--lgray);display:grid;place-items:center;padding:.75rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:var(--navy);text-align:center;overflow:hidden}
+.dac-img img{width:100%;height:100%;object-fit:contain}
+.dac-body{padding:.65rem}
+.dac-name{font-size:.8rem;font-weight:600;color:var(--navy);line-height:1.3}
+.dac-cat{font-size:.68rem;color:var(--gray);margin:.1rem 0}
+.dac-actions{display:flex;gap:.3rem;margin-top:.5rem}
+
+/* BULK UPLOAD */
+.upload-zone{border:2px dashed var(--lgray);border-radius:10px;padding:2rem;text-align:center;background:var(--cream);cursor:pointer;transition:all .2s}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--navy);background:white}
+.upload-zone input{display:none}
+.upload-icon{font-size:2rem;margin-bottom:.5rem}
+.upload-text{font-size:.85rem;color:var(--gray)}
+.upload-sub{font-size:.75rem;color:var(--mgray);margin-top:.25rem}
+.csv-preview{margin-top:1rem;max-height:200px;overflow-y:auto;border-radius:8px;border:1px solid var(--lgray)}
+
+/* CONNECTION */
+.conn-box{background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:12px;padding:1.4rem;color:white;margin-bottom:1.25rem}
+.conn-box h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;margin-bottom:.35rem}
+.conn-box p{font-size:.82rem;opacity:.8;margin-bottom:.85rem}
+.conn-input-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.conn-input{flex:1;min-width:220px;padding:.6rem .85rem;border:1.5px solid rgba(255,255,255,.25);border-radius:8px;background:rgba(255,255,255,.12);color:white;font-family:'Jost',sans-serif;font-size:.86rem}
+.conn-input::placeholder{color:rgba(255,255,255,.45)}
+.conn-input:focus{outline:none;border-color:white;background:rgba(255,255,255,.2)}
+.conn-status{margin-top:.65rem;font-size:.82rem;opacity:.8}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:white;padding:.75rem 1.3rem;border-radius:10px;font-size:.83rem;font-weight:500;box-shadow:0 6px 24px rgba(0,0,0,.2);transform:translateY(120%);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:999}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{background:var(--green)}
+#toast.err{background:var(--red)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;place-items:center;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:grid}
+.modal{background:white;border-radius:16px;padding:1.75rem;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--navy);margin-bottom:1rem}
+.modal-actions{display:flex;gap:.65rem;margin-top:1.25rem;justify-content:flex-end}
+
+/* SECTIONS */
+.admin-section{display:none}.admin-section.active{display:block}
+
+@media(max-width:768px){
+  sidebar{width:60px}
+  .sb-logo-text,.sb-logo-sub,.sb-item span:not(.sb-icon),.sb-section,.sb-store-btn{display:none}
+  .sb-item{padding:.8rem;justify-content:center}
+  .main{margin-left:60px;padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">✿</div>
+    <div class="login-title">Rossell Creations</div>
+    <div class="login-sub">Admin Panel — Owner Access Only</div>
+    <input type="password" class="login-input" id="login-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="login-err">Incorrect password. Try again.</div>
+    <div style="font-size:.7rem;color:var(--gray);margin-top:1rem">Default password: <strong>rossell2024</strong><br>Change it in the script settings.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+<sidebar>
+  <div class="sb-logo">
+    <div class="sb-logo-icon">✿</div>
+    <div class="sb-logo-text">RC Admin</div>
+    <div class="sb-logo-sub">Dashboard</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <div class="sb-item active" onclick="showSection('dashboard',this)"><span class="sb-icon">📊</span><span>Dashboard</span></div>
+    <div class="sb-item" onclick="showSection('orders',this)"><span class="sb-icon">📦</span><span>Orders</span></div>
+    <div class="sb-item" onclick="showSection('requests',this)"><span class="sb-icon">✉️</span><span>Custom Requests</span></div>
+    <div class="sb-section">Products</div>
+    <div class="sb-item" onclick="showSection('designs',this)"><span class="sb-icon">👕</span><span>Apparel Designs</span></div>
+    <div class="sb-item" onclick="showSection('laser',this)"><span class="sb-icon">⚡</span><span>Laser Products</span></div>
+    <div class="sb-item" onclick="showSection('printing',this)"><span class="sb-icon">🖨️</span><span>3D Print Products</span></div>
+    <div class="sb-section">Settings</div>
+    <div class="sb-item" onclick="showSection('settings',this)"><span class="sb-icon">⚙️</span><span>Settings</span></div>
+  </div>
+  <div class="sb-footer">
+    <a class="sb-store-btn" href="index.html" target="_blank">View Store →</a>
+  </div>
+</sidebar>
+
+<div class="main">
+
+<!-- ── DASHBOARD ── -->
+<div class="admin-section active" id="sec-dashboard">
+  <div class="page-header">
+    <div class="page-title">Dashboard</div>
+    <div class="page-sub">Welcome back! Here's an overview of Rossell Creations.</div>
+  </div>
+  <div class="stats" id="dash-stats">
+    <div class="stat"><div class="stat-num" id="s-orders">—</div><div class="stat-label">Total Orders</div></div>
+    <div class="stat g"><div class="stat-num" id="s-revenue">—</div><div class="stat-label">Revenue</div></div>
+    <div class="stat r"><div class="stat-num" id="s-pending">—</div><div class="stat-label">Pending Payment</div></div>
+    <div class="stat t"><div class="stat-num" id="s-designs">—</div><div class="stat-label">Active Designs</div></div>
+    <div class="stat"><div class="stat-num" id="s-requests">—</div><div class="stat-label">New Requests</div></div>
+  </div>
+
+  <div class="conn-box">
+    <h3>🔗 Backend Connection</h3>
+    <p>Connect to your Google Apps Script to sync orders, designs, and send email notifications.</p>
+    <div class="conn-input-row">
+      <input type="url" class="conn-input" id="script-url" placeholder="https://script.google.com/macros/s/…/exec">
+      <button class="btn btn-gold" onclick="connectBackend()">Connect</button>
+    </div>
+    <div class="conn-status" id="conn-status">Not connected — paste your Apps Script URL above</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📦 Recent Orders</div>
+    <div id="dash-recent-orders"><p style="color:var(--gray);font-size:.85rem">Connect your backend to see orders.</p></div>
+  </div>
+</div>
+
+<!-- ── ORDERS ── -->
+<div class="admin-section" id="sec-orders">
+  <div class="page-header">
+    <div class="page-title">Orders</div>
+    <div class="page-sub">All storefront orders — track production and delivery status.</div>
+  </div>
+  <div style="display:flex;gap:.65rem;margin-bottom:1rem;flex-wrap:wrap">
+    <input class="fi" style="max-width:260px" id="order-search" placeholder="🔍 Search name, order #…" oninput="renderOrderTable()">
+    <select class="fi" style="max-width:180px" id="order-filter" onchange="renderOrderTable()">
+      <option value="">All Status</option>
+      <option>Pending Payment</option>
+      <option>Paid ✅</option>
+    </select>
+    <button class="btn btn-ghost btn-sm" onclick="exportOrdersCSV()">⬇ Export CSV</button>
+  </div>
+  <div class="tbl-wrap" id="orders-tbl"></div>
+</div>
+
+<!-- ── CUSTOM REQUESTS ── -->
+<div class="admin-section" id="sec-requests">
+  <div class="page-header">
+    <div class="page-title">Custom Requests</div>
+    <div class="page-sub">Laser engraving and 3D print custom requests from customers.</div>
+  </div>
+  <div class="tbl-wrap" id="requests-tbl"></div>
+</div>
+
+<!-- ── APPAREL DESIGNS ── -->
+<div class="admin-section" id="sec-designs">
+  <div class="page-header">
+    <div class="page-title">Apparel Designs</div>
+    <div class="page-sub">Manage all shirt designs. Add individually, bulk upload via CSV, or paste a list.</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showDesignTab('grid',this)">🖼 Design Grid</button>
+    <button class="tab-btn" onclick="showDesignTab('add',this)">➕ Add Design</button>
+    <button class="tab-btn" onclick="showDesignTab('bulk',this)">📤 Bulk Upload</button>
+    <button class="tab-btn" onclick="showDesignTab('paste',this)">📋 Paste List</button>
+  </div>
+
+  <!-- Grid -->
+  <div id="dt-grid">
+    <div style="display:flex;gap:.65rem;margin-bottom:1rem;flex-wrap:wrap">
+      <input class="fi" style="max-width:240px" id="design-search" placeholder="🔍 Search designs…" oninput="renderDesignGrid()">
+      <select class="fi" style="max-width:180px" id="design-cat-filter" onchange="renderDesignGrid()">
+        <option value="">All Categories</option>
+        <option>School Spirit</option><option>Teacher Gear</option><option>Inclusion Gear</option>
+        <option>Kid's Gear</option><option>Grade Level</option><option>School Staff</option>
+        <option>Nurse Gear</option><option>Holiday Gear</option><option>Seasonal Gear</option>
+        <option>Scout's Gear</option><option>Groups</option>
+      </select>
+    </div>
+    <div class="design-admin-grid" id="design-admin-grid"></div>
+  </div>
+
+  <!-- Add Single -->
+  <div id="dt-add" style="display:none">
+    <div class="card">
+      <div class="card-title">Add New Design</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="fl">Design Name *</label><input class="fi" id="d-name" placeholder="e.g. Trojan Spirit"></div>
+        <div class="form-group">
+          <label class="fl">Category *</label>
+          <select class="fi" id="d-cat">
+            <option value="">— Select —</option>
+            <option>School Spirit</option><option>Teacher Gear</option><option>Inclusion Gear</option>
+            <option>Kid's Gear</option><option>Grade Level</option><option>School Staff</option>
+            <option>Nurse Gear</option><option>Holiday Gear</option><option>Seasonal Gear</option>
+            <option>Scout's Gear</option><option>Groups</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="fl">Image URL (optional)</label><input class="fi" id="d-img" placeholder="https://… paste a direct image link or leave blank"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="addDesign()">✦ Add Design</button>
+        <button class="btn btn-gold" onclick="addDesign(true)">Add & Add Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk CSV Upload -->
+  <div id="dt-bulk" style="display:none">
+    <div class="card">
+      <div class="card-title">Bulk Upload via CSV</div>
+      <p style="font-size:.83rem;color:var(--gray);margin-bottom:1rem">Upload a CSV file with columns: <strong>Name, Category, Image URL (optional)</strong></p>
+      <div style="background:var(--lgray);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:.8rem">
+        <strong>CSV Format Example:</strong><br>
+        <code>Name,Category,Image URL</code><br>
+        <code>Trojan Spirit,School Spirit,https://example.com/img.png</code><br>
+        <code>Teacher Life,Teacher Gear,</code>
+      </div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('csv-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+        <input type="file" id="csv-input" accept=".csv" onchange="handleCSVUpload(event)">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">Click to upload CSV or drag & drop</div>
+        <div class="upload-sub">Supports .csv files</div>
+      </div>
+      <div id="csv-preview"></div>
+      <div id="csv-btns" style="display:none" class="btn-row">
+        <button class="btn btn-primary" onclick="importCSVDesigns()">✦ Import All Designs</button>
+        <button class="btn btn-ghost" onclick="clearCSV()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paste List -->
+  <div id="dt-paste" style="display:none">
+    <div class="card">
+      <div class="card-title">Paste a List of Design Names</div>
+      <p style="font-size:.83rem;color:var(--gray);margin-bottom:1rem">Paste design names one per line. Assign them all to one category, or use format: <strong>Name | Category</strong></p>
+      <div class="form-group" style="margin-bottom:.85rem">
+        <label class="fl">Default Category (if not specified per line)</label>
+        <select class="fi" id="paste-cat" style="max-width:260px">
+          <option value="">— Select default —</option>
+          <option>School Spirit</option><option>Teacher Gear</option><option>Inclusion Gear</option>
+          <option>Kid's Gear</option><option>Grade Level</option><option>School Staff</option>
+          <option>Nurse Gear</option><option>Holiday Gear</option><option>Seasonal Gear</option>
+          <option>Scout's Gear</option><option>Groups</option>
+        </select>
+      </div>
+      <textarea class="fi" id="paste-list" style="min-height:200px" placeholder="Panther Spirit&#10;Bruin Spirit&#10;Eagle Spirit | School Spirit&#10;Teacher Life | Teacher Gear&#10;Coffee & Kindness"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="importPasteList()">✦ Import Designs</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('paste-list').value=''">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LASER PRODUCTS ── -->
+<div class="admin-section" id="sec-laser">
+  <div class="page-header">
+    <div class="page-title">Laser Engraving Products</div>
+    <div class="page-sub">Manage products you offer for laser engraving.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Add New Product <button class="btn btn-primary btn-sm" onclick="openLaserModal()">+ Add</button></div>
+    <div class="tbl-wrap"><table id="laser-tbl">
+      <thead><tr><th>Icon</th><th>Name</th><th>Description</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="laser-tbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ── 3D PRINT PRODUCTS ── -->
+<div class="admin-section" id="sec-printing">
+  <div class="page-header">
+    <div class="page-title">3D Print Products</div>
+    <div class="page-sub">Manage your 3D printing catalog.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Add New Product <button class="btn btn-primary btn-sm" onclick="openPrintModal()">+ Add</button></div>
+    <div class="tbl-wrap"><table id="print-tbl">
+      <thead><tr><th>Icon</th><th>Name</th><th>Description</th><th>Size</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="print-tbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ── SETTINGS ── -->
+<div class="admin-section" id="sec-settings">
+  <div class="page-header">
+    <div class="page-title">Settings</div>
+    <div class="page-sub">Configure your storefront and admin panel.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Admin Password</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="fl">New Password</label><input type="password" class="fi" id="new-pass" placeholder="Enter new password"></div>
+      <div class="form-group"><label class="fl">Confirm Password</label><input type="password" class="fi" id="conf-pass" placeholder="Confirm new password"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="changePassword()">Update Password</button></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Apparel Pricing</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="fl">T-Shirt ($)</label><input class="fi fi-sm" id="p-tshirt" value="15" type="number"></div>
+      <div class="form-group"><label class="fl">Comfort Color ($)</label><input class="fi fi-sm" id="p-cc" value="18" type="number"></div>
+      <div class="form-group"><label class="fl">Long Sleeve ($)</label><input class="fi fi-sm" id="p-ls" value="18" type="number"></div>
+      <div class="form-group"><label class="fl">Crewneck ($)</label><input class="fi fi-sm" id="p-cn" value="25" type="number"></div>
+      <div class="form-group"><label class="fl">Hoodie ($)</label><input class="fi fi-sm" id="p-hoodie" value="30" type="number"></div>
+      <div class="form-group"><label class="fl">Quarter Zip ($)</label><input class="fi fi-sm" id="p-qz" value="35" type="number"></div>
+      <div class="form-group"><label class="fl">Sweatpants ($)</label><input class="fi fi-sm" id="p-sp" value="30" type="number"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="savePricing()">Save Pricing</button></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Danger Zone</div>
+    <button class="btn btn-danger" onclick="if(confirm('Clear ALL local data?')){localStorage.clear();toast('All data cleared','err');location.reload()}">🗑 Clear All Local Data</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ADD/EDIT DESIGN MODAL -->
+<div class="modal-overlay" id="design-modal" onclick="if(event.target.id==='design-modal')closeDesignModal()">
+  <div class="modal">
+    <h3 id="dm-title">Edit Design</h3>
+    <input type="hidden" id="dm-idx">
+    <div class="form-grid">
+      <div class="form-group"><label class="fl">Name</label><input class="fi" id="dm-name"></div>
+      <div class="form-group"><label class="fl">Category</label>
+        <select class="fi" id="dm-cat">
+          <option>School Spirit</option><option>Teacher Gear</option><option>Inclusion Gear</option>
+          <option>Kid's Gear</option><option>Grade Level</option><option>School Staff</option>
+          <option>Nurse Gear</option><option>Holiday Gear</option><option>Seasonal Gear</option>
+          <option>Scout's Gear</option><option>Groups</option>
+        </select>
+      </div>
+      <div class="form-group full"><label class="fl">Image URL</label><input class="fi" id="dm-img" placeholder="https://…"></div>
+      <div class="form-group"><label class="fl">Active?</label>
+        <select class="fi" id="dm-active"><option value="true">✅ Active</option><option value="false">❌ Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeDesignModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDesignEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- LASER PRODUCT MODAL -->
+<div class="modal-overlay" id="laser-modal" onclick="if(event.target.id==='laser-modal')closeLaserModal()">
+  <div class="modal">
+    <h3 id="lm-title">Add Laser Product</h3>
+    <input type="hidden" id="lm-idx">
+    <div class="form-grid">
+      <div class="form-group"><label class="fl">Name</label><input class="fi" id="lm-name" placeholder="e.g. Metal Tumbler"></div>
+      <div class="form-group"><label class="fl">Icon (emoji)</label><input class="fi fi-sm" id="lm-icon" placeholder="☕"></div>
+      <div class="form-group"><label class="fl">Price ($)</label><input class="fi fi-sm" id="lm-price" type="number" placeholder="20"></div>
+      <div class="form-group"><label class="fl">Active?</label>
+        <select class="fi" id="lm-active"><option value="true">✅ Active</option><option value="false">❌ Inactive</option></select>
+      </div>
+      <div class="form-group full"><label class="fl">Description</label><textarea class="fi" id="lm-desc" placeholder="Brief description of the product…"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeLaserModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLaserProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT PRODUCT MODAL -->
+<div class="modal-overlay" id="print-modal" onclick="if(event.target.id==='print-modal')closePrintModal()">
+  <div class="modal">
+    <h3 id="pm-title">Add 3D Print Product</h3>
+    <input type="hidden" id="pm-idx">
+    <div class="form-grid">
+      <div class="form-group"><label class="fl">Name</label><input class="fi" id="pm-name" placeholder="e.g. Fidget Spinner"></div>
+      <div class="form-group"><label class="fl">Icon (emoji)</label><input class="fi fi-sm" id="pm-icon" placeholder="🌀"></div>
+      <div class="form-group"><label class="fl">Size Category</label>
+        <select class="fi" id="pm-size"><option>Small ($5)</option><option>Medium ($15)</option><option>Large ($30)</option><option>Extra Large ($40)</option></select>
+      </div>
+      <div class="form-group"><label class="fl">Active?</label>
+        <select class="fi" id="pm-active"><option value="true">✅ Active</option><option value="false">❌ Inactive</option></select>
+      </div>
+      <div class="form-group full"><label class="fl">Description</label><textarea class="fi" id="pm-desc" placeholder="Brief description…"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closePrintModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePrintProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────
+const DEFAULT_PASS = 'rossell2024';
+function doLogin() {
+  const pass = document.getElementById('login-pass').value;
+  const stored = localStorage.getItem('rc_admin_pass') || DEFAULT_PASS;
+  if (pass === stored) {
+    document.getElementById('login-wrap').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    init();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+function changePassword() {
+  const np = document.getElementById('new-pass').value;
+  const cp = document.getElementById('conf-pass').value;
+  if (!np) { toast('Enter a new password','err'); return; }
+  if (np !== cp) { toast('Passwords do not match','err'); return; }
+  localStorage.setItem('rc_admin_pass', np);
+  toast('Password updated!','ok');
+  document.getElementById('new-pass').value='';
+  document.getElementById('conf-pass').value='';
+}
+
+// ── STATE ──────────────────────────────────────────────────
+let scriptUrl = localStorage.getItem('rc_script_url') || '';
+let designs   = JSON.parse(localStorage.getItem('rc_admin_designs') || '[]');
+let laserProds= JSON.parse(localStorage.getItem('rc_admin_laser') || '[]');
+let printProds= JSON.parse(localStorage.getItem('rc_admin_print') || '[]');
+let orders    = JSON.parse(localStorage.getItem('rc_admin_orders') || '[]');
+let requests  = JSON.parse(localStorage.getItem('rc_admin_requests') || '[]');
+let csvPending= [];
+
+// ── INIT ──────────────────────────────────────────────────
+function init() {
+  if (scriptUrl) {
+    document.getElementById('script-url').value = scriptUrl;
+    syncAll();
+  }
+  renderDesignGrid();
+  renderLaserTable();
+  renderPrintTable();
+  renderOrderTable();
+  renderRequestTable();
+  updateDashStats();
+
+  // Load pricing from settings
+  const pricing = JSON.parse(localStorage.getItem('rc_pricing') || '{}');
+  if (pricing['T-Shirt']) {
+    document.getElementById('p-tshirt').value = pricing['T-Shirt'];
+    document.getElementById('p-cc').value = pricing['Comfort Color'];
+    document.getElementById('p-ls').value = pricing['Long Sleeve'];
+    document.getElementById('p-cn').value = pricing['Crewneck'];
+    document.getElementById('p-hoodie').value = pricing['Hoodie'];
+    document.getElementById('p-qz').value = pricing['Quarter Zip'];
+    document.getElementById('p-sp').value = pricing['Sweatpants'];
+  }
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function showSection(id, el) {
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+function showDesignTab(id, el) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ['grid','add','bulk','paste'].forEach(t => {
+    const el2 = document.getElementById('dt-'+t);
+    if(el2) el2.style.display = t===id ? 'block' : 'none';
+  });
+}
+
+// ── BACKEND CONNECTION ──────────────────────────────────────
+function connectBackend() {
+  const url = document.getElementById('script-url').value.trim();
+  if (!url || !url.includes('script.google.com')) { toast('Enter a valid Apps Script URL','err'); return; }
+  scriptUrl = url;
+  localStorage.setItem('rc_script_url', url);
+  syncAll();
+}
+
+function jsonpCall(url, callback) {
+  const cbName = 'rc_admin_cb_' + Date.now();
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      delete window[cbName]; script.remove();
+      reject(new Error('Request timed out'));
+    }, 12000);
+    window[cbName] = (data) => {
+      clearTimeout(timeout); delete window[cbName]; script.remove();
+      resolve(data);
+    };
+    const script = document.createElement('script');
+    script.src = `${url}&callback=${cbName}`;
+    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('Failed')); };
+    document.head.appendChild(script);
+  });
+}
+
+async function syncAll() {
+  if (!scriptUrl) return;
+  document.getElementById('conn-status').textContent = '⏳ Syncing…';
+  try {
+    // Ping
+    const ping = await jsonpCall(`${scriptUrl}?action=ping`);
+    if (ping.status !== 'ok') throw new Error(ping.error || 'Failed');
+
+    // Load orders
+    const od = await jsonpCall(`${scriptUrl}?action=list_orders`);
+    if (od.orders) { orders = od.orders; localStorage.setItem('rc_admin_orders', JSON.stringify(orders)); }
+
+    // Load designs
+    const dd = await jsonpCall(`${scriptUrl}?action=list_designs`);
+    if (dd.designs && dd.designs.length) { designs = dd.designs.map(d => ({name:d.Name||d.name,cat:d.Category||d.cat,img:d['Image URL']||d.img||'',active:d.Active!==false})); localStorage.setItem('rc_admin_designs', JSON.stringify(designs)); }
+
+    // Load laser
+    const ld = await jsonpCall(`${scriptUrl}?action=list_laser`);
+    if (ld.products && ld.products.length) { laserProds = ld.products.map(p=>({name:p.Name||p.name,icon:p.Icon||p.icon,desc:p.Description||p.desc,price:parseFloat(p.Price||p.price)||0,active:p.Active!==false})); localStorage.setItem('rc_admin_laser', JSON.stringify(laserProds)); }
+
+    // Load print
+    const pd = await jsonpCall(`${scriptUrl}?action=list_print`);
+    if (pd.products && pd.products.length) { printProds = pd.products.map(p=>({name:p.Name||p.name,icon:p.Icon||p.icon,desc:p.Description||p.desc,price:parseFloat(p.Price||p.price)||0,size:p['Size Category']||p.size,active:p.Active!==false})); localStorage.setItem('rc_admin_print', JSON.stringify(printProds)); }
+
+    // Load requests
+    const rd = await jsonpCall(`${scriptUrl}?action=list_requests`);
+    if (rd.requests) { requests = rd.requests; localStorage.setItem('rc_admin_requests', JSON.stringify(requests)); }
+
+    document.getElementById('conn-status').innerHTML = '<span style="color:#6FE082">✅ Connected & synced!</span>';
+    renderDesignGrid(); renderLaserTable(); renderPrintTable(); renderOrderTable(); renderRequestTable(); updateDashStats();
+    toast('Synced with backend!','ok');
+  } catch(err) {
+    document.getElementById('conn-status').innerHTML = `<span style="color:#FF6B6B">❌ ${err.message}</span>`;
+    toast('Sync failed — check URL','err');
+  }
+}
+
+// ── DASHBOARD STATS ────────────────────────────────────────
+function updateDashStats() {
+  document.getElementById('s-orders').textContent = orders.length || designs.length > 0 ? orders.length : '—';
+  const rev = orders.reduce((s,o) => s + (parseFloat(o['Total ($)']||o.total)||0), 0);
+  document.getElementById('s-revenue').textContent = rev > 0 ? `$${rev.toFixed(0)}` : '—';
+  document.getElementById('s-pending').textContent = orders.filter(o=>(o['Payment Status']||'').includes('Pending')).length || 0;
+  document.getElementById('s-designs').textContent = designs.filter(d=>d.active!==false).length || designs.length;
+  document.getElementById('s-requests').textContent = requests.filter(r=>(r.Status||r.status)==='New').length || 0;
+
+  // Recent orders table
+  const recent = [...orders].slice(0,5);
+  if (!recent.length) {
+    document.getElementById('dash-recent-orders').innerHTML = '<p style="color:var(--gray);font-size:.85rem">No orders yet. Connect backend to sync.</p>';
+    return;
+  }
+  document.getElementById('dash-recent-orders').innerHTML = `
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>${recent.map(o=>`<tr>
+        <td><strong>${o['Order #']||'—'}</strong></td>
+        <td>${o['Customer Name']||'—'}</td>
+        <td><strong>$${parseFloat(o['Total ($)')||0).toFixed(2)}</strong></td>
+        <td><span class="badge ${(o['Payment Status']||'').includes('Paid')?'badge-paid':'badge-pending'}">${o['Payment Status']||'Pending'}</span></td>
+        <td>${o.Date||'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+}
+
+// ── DESIGNS ────────────────────────────────────────────────
+function renderDesignGrid() {
+  const search = (document.getElementById('design-search')?.value||'').toLowerCase();
+  const cat    = document.getElementById('design-cat-filter')?.value||'';
+  let f = designs.filter(d =>
+    (!search || d.name.toLowerCase().includes(search)) &&
+    (!cat || d.cat === cat)
+  );
+  const grid = document.getElementById('design-admin-grid');
+  if (!f.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray)">No designs yet. Use the Add or Bulk Upload tabs to get started!</div>`;
+    return;
+  }
+  grid.innerHTML = f.map((d,i) => `
+    <div class="design-admin-card">
+      <div class="dac-img">${d.img?`<img src="${d.img}" alt="${d.name}" loading="lazy">`:`${d.name}`}</div>
+      <div class="dac-body">
+        <div class="dac-name">${d.name}</div>
+        <div class="dac-cat">${d.cat}</div>
+        <span class="badge ${d.active!==false?'badge-active':'badge-inactive'}">${d.active!==false?'Active':'Inactive'}</span>
+        <div class="dac-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editDesign(${designs.indexOf(d)})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteDesign(${designs.indexOf(d)})">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function addDesign(again=false) {
+  const name = document.getElementById('d-name').value.trim();
+  const cat  = document.getElementById('d-cat').value;
+  const img  = document.getElementById('d-img').value.trim();
+  if (!name) { toast('Enter a design name','err'); return; }
+  if (!cat)  { toast('Select a category','err'); return; }
+  designs.push({ name, cat, img, active: true });
+  saveDesigns();
+  toast(`✓ "${name}" added!`,'ok');
+  document.getElementById('d-name').value = '';
+  document.getElementById('d-img').value = '';
+  if (!again) { showDesignTab('grid', document.querySelector('.tab-btn')); renderDesignGrid(); }
+}
+
+function editDesign(i) {
+  const d = designs[i];
+  document.getElementById('dm-idx').value = i;
+  document.getElementById('dm-name').value = d.name;
+  document.getElementById('dm-cat').value  = d.cat;
+  document.getElementById('dm-img').value  = d.img||'';
+  document.getElementById('dm-active').value = String(d.active!==false);
+  document.getElementById('design-modal').classList.add('open');
+}
+function closeDesignModal() { document.getElementById('design-modal').classList.remove('open'); }
+function saveDesignEdit() {
+  const i = parseInt(document.getElementById('dm-idx').value);
+  designs[i] = {
+    name:   document.getElementById('dm-name').value.trim(),
+    cat:    document.getElementById('dm-cat').value,
+    img:    document.getElementById('dm-img').value.trim(),
+    active: document.getElementById('dm-active').value === 'true',
+  };
+  saveDesigns(); closeDesignModal(); renderDesignGrid(); toast('Design updated!','ok');
+}
+function deleteDesign(i) {
+  if (!confirm(`Delete "${designs[i].name}"?`)) return;
+  designs.splice(i,1); saveDesigns(); renderDesignGrid(); toast('Design deleted');
+}
+function saveDesigns() { localStorage.setItem('rc_admin_designs', JSON.stringify(designs)); updateDashStats(); }
+
+// ── BULK CSV UPLOAD ────────────────────────────────────────
+function handleCSVUpload(event) {
+  const file = event.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseCSV(e.target.result);
+  reader.readAsText(file);
+}
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  const file = event.dataTransfer.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseCSV(e.target.result);
+  reader.readAsText(file);
+}
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const header = lines[0].toLowerCase();
+  const start  = header.includes('name') ? 1 : 0;
+  csvPending = [];
+  lines.slice(start).forEach(line => {
+    if (!line.trim()) return;
+    const parts = line.split(',').map(p=>p.replace(/"/g,'').trim());
+    if (parts[0]) csvPending.push({ name:parts[0], cat:parts[1]||'', img:parts[2]||'', active:true });
+  });
+  const preview = document.getElementById('csv-preview');
+  preview.innerHTML = `
+    <div style="padding:.75rem;font-size:.82rem;font-weight:600;color:var(--navy);border-bottom:1px solid var(--lgray)">
+      Preview — ${csvPending.length} designs found
+    </div>
+    <div style="max-height:160px;overflow-y:auto">
+      ${csvPending.slice(0,20).map(d=>`<div style="padding:.45rem .75rem;border-bottom:1px solid var(--lgray);font-size:.8rem"><strong>${d.name}</strong> <span style="color:var(--gray)">${d.cat||'(no category)'}</span></div>`).join('')}
+      ${csvPending.length > 20 ? `<div style="padding:.45rem .75rem;font-size:.78rem;color:var(--gray)">…and ${csvPending.length-20} more</div>` : ''}
+    </div>`;
+  document.getElementById('csv-btns').style.display = 'flex';
+}
+function importCSVDesigns() {
+  if (!csvPending.length) return;
+  designs = [...designs, ...csvPending];
+  saveDesigns(); clearCSV(); showDesignTab('grid', document.querySelector('.tab-btn')); renderDesignGrid();
+  toast(`✓ ${csvPending.length} designs imported!`,'ok');
+  csvPending = [];
+}
+function clearCSV() {
+  document.getElementById('csv-preview').innerHTML='';
+  document.getElementById('csv-btns').style.display='none';
+  document.getElementById('csv-input').value='';
+  csvPending=[];
+}
+
+// ── PASTE LIST ─────────────────────────────────────────────
+function importPasteList() {
+  const text    = document.getElementById('paste-list').value.trim();
+  const defCat  = document.getElementById('paste-cat').value;
+  if (!text) { toast('Paste some design names first','err'); return; }
+  const lines = text.split('\n').filter(l=>l.trim());
+  let added = 0;
+  lines.forEach(line => {
+    const parts = line.split('|').map(p=>p.trim());
+    const name  = parts[0]; if(!name) return;
+    const cat   = parts[1] || defCat;
+    designs.push({ name, cat, img:'', active:true });
+    added++;
+  });
+  saveDesigns();
+  document.getElementById('paste-list').value='';
+  showDesignTab('grid', document.querySelector('.tab-btn'));
+  renderDesignGrid();
+  toast(`✓ ${added} designs added!`,'ok');
+}
+
+// ── LASER PRODUCTS ─────────────────────────────────────────
+function renderLaserTable() {
+  const tbody = document.getElementById('laser-tbody');
+  if (!laserProds.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:1.5rem">No laser products yet. Connect backend or add manually.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = laserProds.map((p,i) => `
+    <tr>
+      <td style="font-size:1.4rem">${p.icon}</td>
+      <td><strong>${p.name}</strong></td>
+      <td style="color:var(--gray);max-width:200px">${p.desc}</td>
+      <td><strong>$${p.price}</strong></td>
+      <td><span class="badge ${p.active!==false?'badge-active':'badge-inactive'}">${p.active!==false?'Active':'Inactive'}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editLaser(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteLaser(${i})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+function openLaserModal(editIdx=null) {
+  document.getElementById('lm-idx').value = editIdx !== null ? editIdx : '';
+  document.getElementById('lm-title').textContent = editIdx !== null ? 'Edit Laser Product' : 'Add Laser Product';
+  if (editIdx !== null) {
+    const p = laserProds[editIdx];
+    document.getElementById('lm-name').value = p.name;
+    document.getElementById('lm-icon').value = p.icon;
+    document.getElementById('lm-price').value = p.price;
+    document.getElementById('lm-desc').value = p.desc;
+    document.getElementById('lm-active').value = String(p.active!==false);
+  } else {
+    ['lm-name','lm-icon','lm-price','lm-desc'].forEach(id=>document.getElementById(id).value='');
+  }
+  document.getElementById('laser-modal').classList.add('open');
+}
+function editLaser(i) { openLaserModal(i); }
+function closeLaserModal() { document.getElementById('laser-modal').classList.remove('open'); }
+function saveLaserProduct() {
+  const name  = document.getElementById('lm-name').value.trim();
+  const icon  = document.getElementById('lm-icon').value.trim();
+  const price = parseFloat(document.getElementById('lm-price').value)||0;
+  const desc  = document.getElementById('lm-desc').value.trim();
+  const active= document.getElementById('lm-active').value === 'true';
+  if (!name) { toast('Enter a product name','err'); return; }
+  const idx = document.getElementById('lm-idx').value;
+  const prod = {name,icon:icon||'⚡',price,desc,active};
+  if (idx !== '') laserProds[parseInt(idx)] = prod;
+  else laserProds.push(prod);
+  localStorage.setItem('rc_admin_laser', JSON.stringify(laserProds));
+  closeLaserModal(); renderLaserTable(); toast('Laser product saved!','ok');
+}
+function deleteLaser(i) {
+  if(!confirm(`Delete "${laserProds[i].name}"?`)) return;
+  laserProds.splice(i,1); localStorage.setItem('rc_admin_laser',JSON.stringify(laserProds)); renderLaserTable(); toast('Deleted');
+}
+
+// ── 3D PRINT PRODUCTS ──────────────────────────────────────
+function renderPrintTable() {
+  const tbody = document.getElementById('print-tbody');
+  if (!printProds.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray);padding:1.5rem">No print products yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = printProds.map((p,i) => `
+    <tr>
+      <td style="font-size:1.4rem">${p.icon}</td>
+      <td><strong>${p.name}</strong></td>
+      <td style="color:var(--gray);max-width:180px">${p.desc}</td>
+      <td>${p.size||'—'}</td>
+      <td><strong>$${p.price}</strong></td>
+      <td><span class="badge ${p.active!==false?'badge-active':'badge-inactive'}">${p.active!==false?'Active':'Inactive'}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editPrint(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePrint(${i})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+const PRINT_PRICES = {'Small ($5)':5,'Medium ($15)':15,'Large ($30)':30,'Extra Large ($40)':40};
+function openPrintModal(editIdx=null) {
+  document.getElementById('pm-idx').value = editIdx !== null ? editIdx : '';
+  document.getElementById('pm-title').textContent = editIdx !== null ? 'Edit 3D Print Product' : 'Add 3D Print Product';
+  if (editIdx !== null) {
+    const p = printProds[editIdx];
+    document.getElementById('pm-name').value = p.name;
+    document.getElementById('pm-icon').value = p.icon;
+    document.getElementById('pm-desc').value = p.desc;
+    document.getElementById('pm-active').value = String(p.active!==false);
+  } else {
+    ['pm-name','pm-icon','pm-desc'].forEach(id=>document.getElementById(id).value='');
+  }
+  document.getElementById('print-modal').classList.add('open');
+}
+function editPrint(i) { openPrintModal(i); }
+function closePrintModal() { document.getElementById('print-modal').classList.remove('open'); }
+function savePrintProduct() {
+  const name  = document.getElementById('pm-name').value.trim();
+  const icon  = document.getElementById('pm-icon').value.trim();
+  const sizeLabel = document.getElementById('pm-size').value;
+  const price = PRINT_PRICES[sizeLabel] || 5;
+  const desc  = document.getElementById('pm-desc').value.trim();
+  const active= document.getElementById('pm-active').value === 'true';
+  if (!name) { toast('Enter a product name','err'); return; }
+  const idx = document.getElementById('pm-idx').value;
+  const prod = {name,icon:icon||'🖨️',price,size:sizeLabel.split(' (')[0],desc,active};
+  if (idx !== '') printProds[parseInt(idx)] = prod;
+  else printProds.push(prod);
+  localStorage.setItem('rc_admin_print', JSON.stringify(printProds));
+  closePrintModal(); renderPrintTable(); toast('Print product saved!','ok');
+}
+function deletePrint(i) {
+  if(!confirm(`Delete "${printProds[i].name}"?`)) return;
+  printProds.splice(i,1); localStorage.setItem('rc_admin_print',JSON.stringify(printProds)); renderPrintTable(); toast('Deleted');
+}
+
+// ── ORDERS TABLE ───────────────────────────────────────────
+function renderOrderTable() {
+  const search = (document.getElementById('order-search')?.value||'').toLowerCase();
+  const filter = document.getElementById('order-filter')?.value||'';
+  let f = orders.filter(o =>
+    (!search || [(o['Customer Name']||''),(o['Order #']||'')].join(' ').toLowerCase().includes(search)) &&
+    (!filter || (o['Payment Status']||'').includes(filter.replace(' ✅','')))
+  );
+  const wrap = document.getElementById('orders-tbl');
+  if (!f.length) {
+    wrap.innerHTML = '<div style="background:white;padding:2rem;text-align:center;color:var(--gray);border-radius:10px">No orders found. Connect backend to sync.</div>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Created</th><th>Delivered</th></tr></thead>
+    <tbody>${f.map(o=>`<tr>
+      <td><strong>${o['Order #']||'—'}</strong></td>
+      <td>${o.Date||'—'}</td>
+      <td>${o['Customer Name']||'—'}<br><span style="font-size:.7rem;color:var(--gray)">${o['Customer Email']||''}</span></td>
+      <td style="max-width:200px;font-size:.75rem;color:var(--gray)">${(o['Items Summary']||'').slice(0,80)}${(o['Items Summary']||'').length>80?'…':''}</td>
+      <td><strong>$${parseFloat(o['Total ($)')||0).toFixed(2)}</strong></td>
+      <td><span class="badge ${(o['Payment Status']||'').includes('Paid')?'badge-paid':'badge-pending'}">${o['Payment Status']||'Pending'}</span></td>
+      <td>${o['Created?']?'✅':'⬜'}</td>
+      <td>${o['Delivered?']?'✅':'⬜'}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function exportOrdersCSV() {
+  const hdrs = ['Order #','Date','Customer Name','Customer Email','Items Summary','Total ($)','Payment Status','Created?','Delivered?'];
+  const rows = orders.map(o => hdrs.map(h=>`"${(o[h]||'').toString().replace(/"/g,'""')}"`).join(','));
+  const csv  = [hdrs.join(','),...rows].join('\n');
+  const a    = document.createElement('a');
+  a.href     = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = `rossell-orders-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); toast('Orders exported!','ok');
+}
+
+// ── REQUESTS TABLE ─────────────────────────────────────────
+function renderRequestTable() {
+  const wrap = document.getElementById('requests-tbl');
+  if (!requests.length) {
+    wrap.innerHTML = '<div style="background:white;padding:2rem;text-align:center;color:var(--gray);border-radius:10px">No custom requests yet.</div>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr><th>Date</th><th>Type</th><th>Name</th><th>Contact</th><th>Description</th><th>Status</th></tr></thead>
+    <tbody>${requests.map(r=>`<tr>
+      <td>${r.Date||r.date||'—'}</td>
+      <td>${r.Type||r.type||'—'}</td>
+      <td><strong>${r.Name||r.name||'—'}</strong></td>
+      <td>${r.Contact||r.contact||'—'}</td>
+      <td style="max-width:220px;font-size:.78rem;color:var(--gray)">${(r.Description||r.description||'').slice(0,100)}</td>
+      <td><span class="badge ${(r.Status||r.status)==='New'?'badge-new':'badge-active'}">${r.Status||r.status||'New'}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ── SETTINGS ───────────────────────────────────────────────
+function savePricing() {
+  const pricing = {
+    'T-Shirt':    parseInt(document.getElementById('p-tshirt').value)||15,
+    'Comfort Color': parseInt(document.getElementById('p-cc').value)||18,
+    'Long Sleeve':   parseInt(document.getElementById('p-ls').value)||18,
+    'Crewneck':  parseInt(document.getElementById('p-cn').value)||25,
+    'Hoodie':    parseInt(document.getElementById('p-hoodie').value)||30,
+    'Quarter Zip':   parseInt(document.getElementById('p-qz').value)||35,
+    'Sweatpants':    parseInt(document.getElementById('p-sp').value)||30,
+  };
+  localStorage.setItem('rc_pricing', JSON.stringify(pricing));
+  toast('Pricing saved! Refresh storefront to apply.','ok');
+}
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg,type='') {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className=`show ${type}`;
+  setTimeout(()=>el.className='',2800);
+}
+</script>
+</body>
+</html>

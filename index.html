@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rossell Creations — Custom Apparel, Engraving & 3D Printing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A2E4A;--gold:#C9A84C;--gold-lt:#E8D5A3;
+  --cream:#FAF7F2;--white:#FFFFFF;--text:#2C2416;
+  --gray:#8A8279;--lgray:#F0EDE8;--teal:#2A7F7F;--rust:#C0522A;
+  --shadow:0 8px 40px rgba(26,46,74,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+header{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:68px;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.logo-wrap{display:flex;align-items:center;gap:.6rem}
+.logo-rose{font-size:1.5rem;color:var(--gold)}
+.logo-text{font-family:'Cinzel',serif;color:var(--white);font-size:1rem;letter-spacing:.1em}
+.logo-sub{color:var(--gold);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;font-weight:300}
+.cart-btn{background:var(--gold);border:none;border-radius:50px;padding:.45rem 1rem;color:var(--navy);font-family:'Jost',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:.35rem;transition:all .2s}
+.cart-btn:hover{background:var(--gold-lt)}
+.cart-count{background:var(--navy);color:var(--gold);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.7rem;font-weight:700}
+.hero{background:var(--navy);padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(201,168,76,.12),transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(201,168,76,.08),transparent 50%)}
+.hero-tag{display:inline-block;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:.3rem .9rem;border-radius:20px;margin-bottom:1.25rem}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:300;color:var(--white);line-height:1.1;margin-bottom:.6rem;font-style:italic}
+.hero h1 span{color:var(--gold);font-style:normal;font-weight:600}
+.hero p{color:rgba(255,255,255,.6);font-size:.95rem;font-weight:300;max-width:440px;margin:0 auto 1.5rem}
+.hero-divider{width:50px;height:1px;background:var(--gold);margin:0 auto 1.5rem}
+.service-tabs{background:var(--white);display:flex;border-bottom:2px solid var(--lgray);position:sticky;top:68px;z-index:200}
+.service-tab{flex:1;padding:.9rem .5rem;text-align:center;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;font-size:.8rem;font-weight:500;color:var(--gray);display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.service-tab .tab-icon{font-size:1.25rem}
+.service-tab.active{color:var(--navy);border-bottom-color:var(--gold);font-weight:600}
+.service-tab:hover:not(.active){color:var(--navy)}
+.service-section{display:none}.service-section.active{display:block}
+.pricing-strip{display:flex;flex-wrap:wrap;justify-content:center;background:var(--gold)}
+.price-item{padding:.75rem 1rem;text-align:center;border-right:1px solid rgba(26,46,74,.15);flex:1;min-width:90px}
+.price-item:last-child{border-right:none}
+.price-name{font-size:.65rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.7}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--navy)}
+.cat-nav{background:var(--white);padding:.8rem 1.5rem;display:flex;gap:.4rem;overflow-x:auto;border-bottom:1px solid var(--lgray)}
+.cat-nav::-webkit-scrollbar{display:none}
+.cat-pill{padding:.38rem .85rem;border-radius:20px;border:1.5px solid var(--lgray);font-size:.76rem;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--gray);background:transparent;transition:all .2s;flex-shrink:0}
+.cat-pill.active,.cat-pill:hover{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.section{padding:1.75rem 1.5rem;max-width:1200px;margin:0 auto}
+.section-header{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.25rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--navy);font-style:italic}
+.section-line{flex:1;height:1px;background:var(--lgray)}
+.section-count{font-size:.73rem;color:var(--gray);font-weight:300}
+.design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.8rem}
+.design-card{background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;transition:all .25s;border:1.5px solid transparent}
+.design-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--gold)}
+.design-img{aspect-ratio:1;background:var(--lgray);display:grid;place-items:center;padding:.9rem;overflow:hidden}
+.design-img img{width:100%;height:100%;object-fit:contain}
+.design-placeholder{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--navy);text-align:center;line-height:1.4}
+.design-info{padding:.6rem .7rem}
+.design-name{font-size:.78rem;font-weight:500;color:var(--navy);line-height:1.3}
+.design-cat{font-size:.68rem;color:var(--gray);font-weight:300}
+.design-from{font-size:.73rem;color:var(--gold);font-weight:600;margin-top:.2rem}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.8rem}
+.product-card{background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;transition:all .25s;border:1.5px solid transparent}
+.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--gold)}
+.product-img{aspect-ratio:1;display:grid;place-items:center;font-size:2.4rem;background:linear-gradient(135deg,var(--lgray),var(--cream))}
+.product-info{padding:.7rem}
+.product-name{font-size:.83rem;font-weight:600;color:var(--navy)}
+.product-desc{font-size:.7rem;color:var(--gray);margin-top:.2rem;line-height:1.4}
+.product-price{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--gold);margin-top:.3rem}
+.byo-banner{background:linear-gradient(135deg,var(--navy),#243d62);border-radius:14px;padding:1.4rem;margin:1.5rem 1.5rem 0;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.byo-icon{font-size:2rem;flex-shrink:0}
+.byo-text{flex:1}.byo-text h3{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.15rem;font-style:italic;margin-bottom:.25rem}
+.byo-text p{color:rgba(255,255,255,.7);font-size:.8rem;line-height:1.5}
+.byo-btn{background:var(--gold);border:none;border-radius:8px;padding:.55rem 1.1rem;color:var(--navy);font-weight:600;font-size:.8rem;cursor:pointer;white-space:nowrap;font-family:'Jost',sans-serif;transition:all .2s;flex-shrink:0}
+.byo-btn:hover{background:var(--gold-lt)}
+.custom-section{border-radius:14px;padding:1.6rem;margin:0 1.5rem 2rem;color:white}
+.custom-section h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;margin-bottom:.3rem}
+.custom-section p{font-size:.82rem;opacity:.8;margin-bottom:1.1rem;line-height:1.6}
+.custom-form{display:grid;gap:.65rem}
+.custom-form input,.custom-form textarea,.custom-form select{padding:.6rem .85rem;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;background:rgba(255,255,255,.1);color:white;font-family:'Jost',sans-serif;font-size:.86rem;width:100%;transition:border .15s}
+.custom-form input::placeholder,.custom-form textarea::placeholder{color:rgba(255,255,255,.5)}
+.custom-form input:focus,.custom-form textarea:focus,.custom-form select:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.15)}
+.custom-form select option{background:var(--navy)}
+.custom-form textarea{min-height:85px;resize:vertical}
+.two-col-custom{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.custom-submit{background:var(--gold);border:none;border-radius:10px;padding:.75rem;color:var(--navy);font-family:'Cinzel',serif;font-size:.83rem;letter-spacing:.08em;font-weight:500;cursor:pointer;width:100%;transition:all .2s}
+.custom-submit:hover{background:var(--gold-lt);transform:translateY(-1px)}
+.print-sizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin-bottom:1.25rem}
+.size-card{background:var(--white);border-radius:12px;padding:1.1rem .9rem;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.size-card:hover,.size-card.sel{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow)}
+.size-icon{font-size:1.9rem;margin-bottom:.4rem}
+.size-label{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--navy)}
+.size-desc{font-size:.68rem;color:var(--gray);margin:.2rem 0}
+.size-price{font-size:1.15rem;font-weight:700;color:var(--gold);font-family:'Cormorant Garamond',serif}
+.size-examples{font-size:.65rem;color:var(--gray);margin-top:.25rem;line-height:1.4}
+.fidget-bundle{background:linear-gradient(135deg,var(--gold),#b8922e);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.65rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,46,74,.7);z-index:500;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:0 0 1.5rem;animation:slideUp .3s cubic-bezier(.34,1.2,.64,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--lgray);border-radius:2px;margin:.9rem auto}
+.modal-design-header{padding:1.1rem 1.5rem .9rem;border-bottom:1px solid var(--lgray);display:flex;gap:.9rem;align-items:center}
+.modal-thumb{width:68px;height:68px;border-radius:10px;background:var(--lgray);display:grid;place-items:center;flex-shrink:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;color:var(--navy);text-align:center;padding:.35rem;overflow:hidden}
+.modal-thumb img{width:100%;height:100%;object-fit:contain}
+.modal-design-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;color:var(--navy)}
+.modal-design-cat{font-size:.73rem;color:var(--gray);margin-top:.15rem}
+.modal-body{padding:1rem 1.5rem}
+.field-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:.4rem;display:block}
+.field-group{margin-bottom:1rem}
+.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem}
+.type-btn{padding:.6rem .5rem;border:1.5px solid var(--lgray);border-radius:10px;background:transparent;cursor:pointer;transition:all .15s;text-align:center;font-family:'Jost',sans-serif}
+.type-btn:hover{border-color:var(--navy)}
+.type-btn.sel{border-color:var(--navy);background:var(--navy);color:var(--white)}
+.t-name{font-size:.78rem;font-weight:500;display:block}
+.t-price{font-size:.9rem;font-weight:600;color:var(--gold);display:block;margin-top:.08rem}
+.type-btn.sel .t-price{color:var(--gold-lt)}
+.brand-grid,.sz-grid{display:flex;flex-wrap:wrap;gap:.35rem}
+.brand-btn,.sz-btn{border:1.5px solid var(--lgray);background:transparent;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s;color:var(--text)}
+.brand-btn{padding:.35rem .75rem;border-radius:20px;font-size:.74rem;font-weight:500}
+.sz-btn{width:48px;height:36px;border-radius:8px;font-size:.74rem;font-weight:500;display:grid;place-items:center}
+.brand-btn:hover,.sz-btn:hover{border-color:var(--navy);color:var(--navy)}
+.brand-btn.sel,.sz-btn.sel{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.field-input{width:100%;padding:.58rem .82rem;border:1.5px solid var(--lgray);border-radius:10px;font-family:'Jost',sans-serif;font-size:.86rem;background:var(--cream);color:var(--text);transition:border .15s}
+.field-input:focus{outline:none;border-color:var(--navy)}
+.two-col-form{display:grid;grid-template-columns:1fr 95px;gap:.6rem}
+.price-summary{background:var(--lgray);border-radius:12px;padding:.85rem 1.05rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.ps-label{font-size:.78rem;color:var(--gray)}
+.ps-break{font-size:.7rem;color:var(--gray);margin-top:.12rem}
+.ps-total{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:600;color:var(--navy)}
+.checkout-btn{width:100%;padding:.9rem;background:var(--gold);border:none;border-radius:12px;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.1em;color:var(--navy);cursor:pointer;transition:all .2s;font-weight:500}
+.checkout-btn:hover{background:var(--gold-lt);transform:translateY(-1px)}
+.checkout-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.modal-note{font-size:.71rem;color:var(--gray);text-align:center;margin-top:.6rem;line-height:1.5}
+.laser-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:1rem}
+.laser-opt{padding:.75rem;border:1.5px solid var(--lgray);border-radius:10px;cursor:pointer;transition:all .15s;text-align:center}
+.laser-opt:hover{border-color:var(--navy)}
+.laser-opt.sel{border-color:var(--navy);background:var(--navy);color:white}
+.lo-icon{font-size:1.35rem;display:block;margin-bottom:.25rem}
+.lo-title{font-size:.8rem;font-weight:600}
+.lo-sub{font-size:.68rem;opacity:.7;margin-top:.08rem}
+.lo-price{font-weight:700;margin-top:.25rem;color:var(--gold);font-size:.85rem}
+.laser-opt.sel .lo-price{color:var(--gold-lt)}
+.cart-overlay{display:none;position:fixed;inset:0;background:rgba(26,46,74,.6);z-index:600;justify-content:flex-end;backdrop-filter:blur(3px)}
+.cart-overlay.open{display:flex}
+.cart-drawer{background:var(--white);width:min(400px,100%);height:100%;overflow-y:auto;display:flex;flex-direction:column;animation:slideRight .3s cubic-bezier(.34,1.2,.64,1)}
+@keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.cart-header{background:var(--navy);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.cart-title{font-family:'Cinzel',serif;color:var(--white);font-size:.92rem;letter-spacing:.1em}
+.close-btn{background:transparent;border:none;color:var(--white);font-size:1.3rem;cursor:pointer}
+.cart-items{flex:1;padding:.9rem}
+.cart-item{display:flex;gap:.7rem;padding:.7rem 0;border-bottom:1px solid var(--lgray);align-items:flex-start}
+.ci-thumb{width:50px;height:50px;border-radius:8px;background:var(--lgray);display:grid;place-items:center;font-size:.65rem;font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;color:var(--navy);padding:.25rem;flex-shrink:0;overflow:hidden}
+.ci-thumb img{width:100%;height:100%;object-fit:contain}
+.ci-info{flex:1}
+.ci-name{font-size:.82rem;font-weight:600;color:var(--navy)}
+.ci-detail{font-size:.7rem;color:var(--gray);margin-top:.15rem;line-height:1.5}
+.ci-price{font-weight:700;color:var(--navy);font-size:.85rem;white-space:nowrap}
+.ci-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.7rem;margin-top:.25rem;padding:0;display:block}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--gray)}
+.cart-footer{padding:1rem;border-top:1px solid var(--lgray);background:var(--white);position:sticky;bottom:0}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:.8rem;align-items:center}
+.ct-label{font-size:.82rem;color:var(--gray)}
+.ct-val{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:600;color:var(--navy)}
+.cart-co-btn{width:100%;padding:.9rem;background:var(--gold);border:none;border-radius:12px;font-family:'Cinzel',serif;font-size:.87rem;letter-spacing:.08em;color:var(--navy);cursor:pointer;transition:all .2s;font-weight:500}
+.cart-co-btn:hover{background:var(--gold-lt)}
+.cart-co-btn:disabled{opacity:.4;cursor:not-allowed}
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(120%);background:var(--navy);color:white;padding:.7rem 1.3rem;border-radius:30px;font-size:.82rem;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.ok{background:var(--teal)}
+footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:1.75rem;font-size:.77rem;font-weight:300;margin-top:3rem}
+.f-logo{font-family:'Cinzel',serif;color:var(--gold);font-size:.95rem;margin-bottom:.35rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-rose">✿</div>
+    <div>
+      <div class="logo-text">Rossell Creations</div>
+      <div class="logo-sub">Custom Apparel · Engraving · 3D Printing</div>
+    </div>
+  </div>
+  <button class="cart-btn" onclick="openCart()">🛍 Cart <span class="cart-count" id="cart-count">0</span></button>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">Veteran Owned · Teacher Made · Community Loved</div>
+  <h1>Made with <span>Heart</span>,<br>Made for You</h1>
+  <div class="hero-divider"></div>
+  <p>Custom apparel, laser engraving & 3D printing. Hundreds of designs, order in minutes.</p>
+</div>
+
+<div class="service-tabs">
+  <div class="service-tab active" onclick="showSvc('apparel',this)"><span class="tab-icon">👕</span>Custom Apparel</div>
+  <div class="service-tab" onclick="showSvc('laser',this)"><span class="tab-icon">⚡</span>Laser Engraving</div>
+  <div class="service-tab" onclick="showSvc('printing',this)"><span class="tab-icon">🖨️</span>3D Printing</div>
+</div>
+
+<!-- ══ APPAREL ══ -->
+<div class="service-section active" id="svc-apparel">
+  <div class="pricing-strip">
+    <div class="price-item"><div class="price-name">T-Shirt</div><div class="price-val">$15</div></div>
+    <div class="price-item"><div class="price-name">Comfort Color</div><div class="price-val">$18</div></div>
+    <div class="price-item"><div class="price-name">Long Sleeve</div><div class="price-val">$18</div></div>
+    <div class="price-item"><div class="price-name">Crewneck</div><div class="price-val">$25</div></div>
+    <div class="price-item"><div class="price-name">Hoodie</div><div class="price-val">$30</div></div>
+    <div class="price-item"><div class="price-name">Quarter Zip</div><div class="price-val">$35</div></div>
+    <div class="price-item"><div class="price-name">Sweatpants</div><div class="price-val">$30</div></div>
+  </div>
+  <div class="cat-nav">
+    <button class="cat-pill active" onclick="filterCat('all',this)">✦ All</button>
+    <button class="cat-pill" onclick="filterCat('School Spirit',this)">🏫 School Spirit</button>
+    <button class="cat-pill" onclick="filterCat('Teacher Gear',this)">🍎 Teacher</button>
+    <button class="cat-pill" onclick="filterCat('Inclusion Gear',this)">💜 Inclusion</button>
+    <button class="cat-pill" onclick="filterCat(&quot;Kid's Gear&quot;,this)">🌟 Kid's</button>
+    <button class="cat-pill" onclick="filterCat('Grade Level',this)">📚 Grade Level</button>
+    <button class="cat-pill" onclick="filterCat('School Staff',this)">🏆 Staff</button>
+    <button class="cat-pill" onclick="filterCat('Nurse Gear',this)">🩺 Nurse</button>
+    <button class="cat-pill" onclick="filterCat('Holiday Gear',this)">🎄 Holiday</button>
+    <button class="cat-pill" onclick="filterCat('Seasonal Gear',this)">🍂 Seasonal</button>
+    <button class="cat-pill" onclick="filterCat(&quot;Scout's Gear&quot;,this)">⚜️ Scouts</button>
+    <button class="cat-pill" onclick="filterCat('Groups',this)">👥 Groups</button>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title" id="section-title">All Designs</h2>
+      <div class="section-line"></div>
+      <span class="section-count" id="section-count"></span>
+    </div>
+    <div class="design-grid" id="design-grid"></div>
+  </div>
+</div>
+
+<!-- ══ LASER ENGRAVING ══ -->
+<div class="service-section" id="svc-laser">
+  <div class="byo-banner">
+    <div class="byo-icon">📦</div>
+    <div class="byo-text">
+      <h3>Have Your Own Item to Engrave?</h3>
+      <p>Bring your tumbler, mug, plaque, or anything engraveable. Small $10 · Medium $15 · Large $20 · +$5 custom artwork.</p>
+    </div>
+    <button class="byo-btn" onclick="openBYO()">Request Engraving →</button>
+  </div>
+  <div class="section">
+    <div class="section-header"><h2 class="section-title">We Supply & Engrave</h2><div class="section-line"></div></div>
+    <div class="product-grid" id="laser-grid"></div>
+  </div>
+  <div class="custom-section" style="background:linear-gradient(135deg,#1e3a5f,var(--teal))">
+    <h3>✦ Custom Engraving Request</h3>
+    <p>Don't see what you need? We can engrave metal, wood, acrylic, leather, and more. Describe your vision and we'll make it happen.</p>
+    <div class="custom-form">
+      <input id="lc-name" placeholder="Your name">
+      <input id="lc-contact" placeholder="Phone or email">
+      <select id="lc-type"><option value="">What would you like engraved?</option><option>Item from your shop</option><option>My own item</option><option>Not sure yet</option></select>
+      <textarea id="lc-desc" placeholder="Describe what you want — text, design, size, material, any special requests…"></textarea>
+      <button class="custom-submit" onclick="submitLaserRequest()">Send Request →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3D PRINTING ══ -->
+<div class="service-section" id="svc-printing">
+  <div class="section" style="padding-bottom:0">
+    <div class="section-header"><h2 class="section-title">Choose Your Size</h2><div class="section-line"></div></div>
+    <div class="print-sizes">
+      <div class="size-card" onclick="sel3D(this,'Small',5)"><div class="size-icon">🔑</div><div class="size-label">Small</div><div class="size-desc">Palm-sized</div><div class="size-price">$5</div><div class="size-examples">Keychains, fidgets, badges, small figures</div></div>
+      <div class="size-card" onclick="sel3D(this,'Medium',15)"><div class="size-icon">📱</div><div class="size-label">Medium</div><div class="size-desc">Fist-sized</div><div class="size-price">$15</div><div class="size-examples">Phone stands, desk items, small toys</div></div>
+      <div class="size-card" onclick="sel3D(this,'Large',30)"><div class="size-icon">🪴</div><div class="size-label">Large</div><div class="size-desc">Two-fist</div><div class="size-price">$30</div><div class="size-examples">Planters, organizers, decor</div></div>
+      <div class="size-card" onclick="sel3D(this,'Extra Large',40)"><div class="size-icon">🏆</div><div class="size-label">XL</div><div class="size-desc">Display-sized</div><div class="size-price">$40</div><div class="size-examples">Large decor, display pieces</div></div>
+    </div>
+    <div class="fidget-bundle">
+      <div><div style="font-family:'Cinzel',serif;color:var(--navy);font-size:.95rem">🎯 Fidget Bundle</div><div style="font-size:.76rem;color:rgba(26,46,74,.75);margin-top:.15rem">Any 3 small fidgets — mix & match</div></div>
+      <div style="display:flex;align-items:center;gap:.65rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--navy)">$20</div>
+        <button class="byo-btn" onclick="openFidget()" style="background:var(--navy);color:var(--gold)">Order →</button>
+      </div>
+    </div>
+    <div class="section-header"><h2 class="section-title">Popular Items</h2><div class="section-line"></div></div>
+    <div class="product-grid" id="print-grid"></div>
+  </div>
+  <div class="custom-section" style="background:linear-gradient(135deg,var(--navy),var(--rust));margin-top:1.5rem">
+    <h3>✦ Custom 3D Print Request</h3>
+    <p>Have something specific in mind? We'll print almost anything. Describe your idea and we'll quote you — most use our flat size pricing above.</p>
+    <div class="custom-form">
+      <div class="two-col-custom">
+        <input id="pc-name" placeholder="Your name">
+        <input id="pc-contact" placeholder="Phone or email">
+      </div>
+      <select id="pc-size"><option value="">Approximate size</option><option>Small (palm) — $5</option><option>Medium (fist) — $15</option><option>Large (two-fist) — $30</option><option>Extra Large — $40</option><option>Not sure — need a quote</option></select>
+      <textarea id="pc-desc" placeholder="Describe what you want printed — size, color, quantity, what it's for…"></textarea>
+      <button class="custom-submit" onclick="submitPrintRequest()">Send Request →</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPAREL MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target.id==='modal')closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-design-header">
+      <div class="modal-thumb" id="m-thumb"></div>
+      <div><div class="modal-design-name" id="m-name"></div><div class="modal-design-cat" id="m-cat"></div></div>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Shirt Type & Price</label>
+        <div class="type-grid">
+          <button class="type-btn" onclick="selType(this,'T-Shirt',15)"><span class="t-name">T-Shirt</span><span class="t-price">$15</span></button>
+          <button class="type-btn" onclick="selType(this,'Comfort Color',18)"><span class="t-name">Comfort Color</span><span class="t-price">$18</span></button>
+          <button class="type-btn" onclick="selType(this,'Long Sleeve',18)"><span class="t-name">Long Sleeve</span><span class="t-price">$18</span></button>
+          <button class="type-btn" onclick="selType(this,'Crewneck',25)"><span class="t-name">Crewneck</span><span class="t-price">$25</span></button>
+          <button class="type-btn" onclick="selType(this,'Hoodie',30)"><span class="t-name">Hoodie</span><span class="t-price">$30</span></button>
+          <button class="type-btn" onclick="selType(this,'Quarter Zip',35)"><span class="t-name">Quarter Zip</span><span class="t-price">$35</span></button>
+          <button class="type-btn" onclick="selType(this,'Sweatpants',30)"><span class="t-name">Sweatpants</span><span class="t-price">$30</span></button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Brand</label>
+        <div class="brand-grid">
+          <button class="brand-btn" onclick="selBrand(this,'Gildan')">Gildan</button>
+          <button class="brand-btn" onclick="selBrand(this,'Bella Canvas')">Bella Canvas</button>
+          <button class="brand-btn" onclick="selBrand(this,'Comfort Colors')">Comfort Colors</button>
+          <button class="brand-btn" onclick="selBrand(this,'Tultex')">Tultex</button>
+          <button class="brand-btn" onclick="selBrand(this,'Hanes')">Hanes</button>
+          <button class="brand-btn" onclick="selBrand(this,'No Preference')">No Preference</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Shirt Color</label>
+        <input class="field-input" id="m-color" placeholder="e.g. Black, Sage, Trojan Blue…">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Size</label>
+        <div class="sz-grid">
+          <button class="sz-btn" onclick="selSz(this,'2T')">2T</button><button class="sz-btn" onclick="selSz(this,'3T')">3T</button><button class="sz-btn" onclick="selSz(this,'4T')">4T</button>
+          <button class="sz-btn" onclick="selSz(this,'YS')">YS</button><button class="sz-btn" onclick="selSz(this,'YM')">YM</button><button class="sz-btn" onclick="selSz(this,'YL')">YL</button><button class="sz-btn" onclick="selSz(this,'YXL')">YXL</button>
+          <button class="sz-btn" onclick="selSz(this,'S')">S</button><button class="sz-btn" onclick="selSz(this,'M')">M</button><button class="sz-btn" onclick="selSz(this,'L')">L</button><button class="sz-btn" onclick="selSz(this,'XL')">XL</button>
+          <button class="sz-btn" onclick="selSz(this,'2XL')">2XL</button><button class="sz-btn" onclick="selSz(this,'3XL')">3XL</button><button class="sz-btn" onclick="selSz(this,'4XL')">4XL</button><button class="sz-btn" onclick="selSz(this,'5XL')">5XL</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="two-col-form">
+          <div><label class="field-label">Your Name</label><input class="field-input" id="m-cust" placeholder="First & last name"></div>
+          <div><label class="field-label">Qty</label><input class="field-input" id="m-qty" type="number" min="1" value="1" style="text-align:center" oninput="updA()"></div>
+        </div>
+      </div>
+      <div class="price-summary"><div><div class="ps-label">Item Total</div><div class="ps-break" id="a-break">Select shirt type</div></div><div class="ps-total" id="a-total">—</div></div>
+      <button class="checkout-btn" onclick="addApparel()">Add to Cart</button>
+      <div class="modal-note">Directed to Square to pay at checkout. Orders ready in 1–2 weeks.</div>
+    </div>
+  </div>
+</div>
+
+<!-- LASER MODAL -->
+<div class="modal-overlay" id="lmodal" onclick="if(event.target.id==='lmodal')closeLM()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-design-header">
+      <div class="modal-thumb" id="lm-thumb" style="font-size:1.8rem"></div>
+      <div><div class="modal-design-name" id="lm-name"></div><div class="modal-design-cat" id="lm-price" style="color:var(--gold);font-weight:600"></div></div>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label class="field-label">Text / Name to Engrave</label><input class="field-input" id="lm-text" placeholder="Leave blank for design only"></div>
+      <div class="field-group">
+        <div class="two-col-form">
+          <div><label class="field-label">Your Name</label><input class="field-input" id="lm-cust" placeholder="First & last name"></div>
+          <div><label class="field-label">Qty</label><input class="field-input" id="lm-qty" type="number" min="1" value="1" style="text-align:center" oninput="updL()"></div>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">Special Instructions</label><textarea class="field-input" id="lm-notes" placeholder="Font, placement, any special requests…" style="min-height:65px;resize:vertical"></textarea></div>
+      <div class="price-summary"><div><div class="ps-label">Item Total</div><div class="ps-break" id="l-break"></div></div><div class="ps-total" id="l-total">—</div></div>
+      <button class="checkout-btn" onclick="addLaser()">Add to Cart</button>
+      <div class="modal-note">Orders ready in 1–2 weeks. Custom art adds 1–3 days.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BYO MODAL -->
+<div class="modal-overlay" id="byo-modal" onclick="if(event.target.id==='byo-modal')closeBYO()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-design-header">
+      <div class="modal-thumb" style="font-size:1.8rem">📦</div>
+      <div><div class="modal-design-name">Bring Your Own Item</div><div class="modal-design-cat">You provide — we engrave</div></div>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Item Size</label>
+        <div class="laser-opt-grid">
+          <div class="laser-opt" onclick="selBYO(this,'Small',10,false)"><span class="lo-icon">🔑</span><div class="lo-title">Small</div><div class="lo-sub">Keychain, tag, badge</div><div class="lo-price">$10</div></div>
+          <div class="laser-opt" onclick="selBYO(this,'Medium',15,false)"><span class="lo-icon">☕</span><div class="lo-title">Medium</div><div class="lo-sub">Tumbler, mug, cup</div><div class="lo-price">$15</div></div>
+          <div class="laser-opt" onclick="selBYO(this,'Large',20,false)"><span class="lo-icon">🪵</span><div class="lo-title">Large</div><div class="lo-sub">Board, plaque, sign</div><div class="lo-price">$20</div></div>
+          <div class="laser-opt" id="art-opt" onclick="selBYO(this,'art',5,true)"><span class="lo-icon">🎨</span><div class="lo-title">+ Custom Art</div><div class="lo-sub">New artwork</div><div class="lo-price">+$5</div></div>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">What to Engrave</label><input class="field-input" id="byo-text" placeholder="Name, text, or describe the design…"></div>
+      <div class="field-group"><label class="field-label">Your Name & Contact</label><input class="field-input" id="byo-cust" placeholder="Name + phone or email"></div>
+      <div class="price-summary"><div><div class="ps-label">Engraving Fee</div><div class="ps-break" id="byo-break">Select item size above</div></div><div class="ps-total" id="byo-total">—</div></div>
+      <button class="checkout-btn" onclick="addBYO()">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT MODAL -->
+<div class="modal-overlay" id="pmodal" onclick="if(event.target.id==='pmodal')closePM()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-design-header">
+      <div class="modal-thumb" id="pm-thumb" style="font-size:1.8rem"></div>
+      <div><div class="modal-design-name" id="pm-name"></div><div class="modal-design-cat" id="pm-price" style="color:var(--gold);font-weight:600"></div></div>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label class="field-label">Color / Filament</label><input class="field-input" id="pm-color" placeholder="e.g. Black, White, Red, No preference…"></div>
+      <div class="field-group"><label class="field-label">Special Instructions</label><textarea class="field-input" id="pm-notes" placeholder="Any customization, text, special requests…" style="min-height:65px;resize:vertical"></textarea></div>
+      <div class="field-group">
+        <div class="two-col-form">
+          <div><label class="field-label">Your Name</label><input class="field-input" id="pm-cust" placeholder="First & last name"></div>
+          <div><label class="field-label">Qty</label><input class="field-input" id="pm-qty" type="number" min="1" value="1" style="text-align:center" oninput="updP()"></div>
+        </div>
+      </div>
+      <div class="price-summary"><div><div class="ps-label">Item Total</div><div class="ps-break" id="p-break"></div></div><div class="ps-total" id="p-total">—</div></div>
+      <button class="checkout-btn" onclick="addPrint()">Add to Cart</button>
+      <div class="modal-note">Print time varies by size. Most orders ready in 1–2 weeks.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cart-overlay" onclick="if(event.target.id==='cart-overlay')closeCart()">
+  <div class="cart-drawer">
+    <div class="cart-header"><div class="cart-title">Your Cart</div><button class="close-btn" onclick="closeCart()">✕</button></div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row"><div class="ct-label">Total</div><div class="ct-val" id="cart-total">$0</div></div>
+      <div style="margin-bottom:.65rem">
+        <label style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);display:block;margin-bottom:.3rem">Your Email (for confirmation)</label>
+        <input type="email" id="checkout-email" placeholder="your@email.com" style="width:100%;padding:.6rem .85rem;border:1.5px solid #DDD5C8;border-radius:8px;font-family:'Jost',sans-serif;font-size:.86rem;background:var(--cream);color:var(--text)">
+        <div style="font-size:.7rem;color:var(--gray);margin-top:.25rem">We'll send you a confirmation with your order number.</div>
+      </div>
+      <button class="cart-co-btn" id="co-btn" onclick="goCheckout()">Proceed to Payment →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Rossell Creations</div>
+  <div>Veteran Owned · Teacher Made · Community Loved</div>
+  <div style="margin-top:.35rem">Questions? Find us on <span style="color:var(--gold)">Facebook</span> or message us anytime.</div>
+</footer>
+<div id="toast"></div>
+
+<script>
+const DESIGNS=[
+  {name:'Panther Spirit',cat:'School Spirit'},{name:'Bruin Spirit',cat:'School Spirit'},
+  {name:'Trojan Spirit',cat:'School Spirit'},{name:'Eagle Spirit',cat:'School Spirit'},
+  {name:'Rocket Spirit',cat:'School Spirit'},{name:'Bulldog Spirit',cat:'School Spirit'},
+  {name:'Wildcat Spirit',cat:'School Spirit'},{name:'Hawk Spirit',cat:'School Spirit'},
+  {name:'Tiger Spirit',cat:'School Spirit'},{name:'Cardinal Spirit',cat:'School Spirit'},
+  {name:'Teacher Life',cat:'Teacher Gear'},{name:'Teach Love Inspire',cat:'Teacher Gear'},
+  {name:'Best Teacher Ever',cat:'Teacher Gear'},{name:'Coffee & Kindness',cat:'Teacher Gear'},
+  {name:'Tired But Trying',cat:'Teacher Gear'},{name:'Teacherpreneur',cat:'Teacher Gear'},
+  {name:'Inclusion Matters',cat:'Inclusion Gear'},{name:'Neurodiversity Pride',cat:'Inclusion Gear'},
+  {name:'Autism Awareness',cat:'Inclusion Gear'},{name:'Different Not Less',cat:'Inclusion Gear'},
+  {name:'Down Syndrome Proud',cat:'Inclusion Gear'},
+  {name:'Future Teacher',cat:"Kid's Gear"},{name:'School Rocks',cat:"Kid's Gear"},{name:'Little Learner',cat:"Kid's Gear"},
+  {name:'Pre-K Crew',cat:'Grade Level'},{name:'Kindergarten Rocks',cat:'Grade Level'},
+  {name:'First Grade Squad',cat:'Grade Level'},{name:'Second Grade Vibes',cat:'Grade Level'},
+  {name:'Third Grade Team',cat:'Grade Level'},{name:'Fourth Grade Rules',cat:'Grade Level'},
+  {name:'Principal Squad',cat:'School Staff'},{name:'Office Crew',cat:'School Staff'},
+  {name:'Counselor Life',cat:'School Staff'},{name:'Bus Driver Strong',cat:'School Staff'},
+  {name:'School Nurse Life',cat:'Nurse Gear'},{name:'Nurse Squad',cat:'Nurse Gear'},
+  {name:'Christmas Vibes',cat:'Holiday Gear'},{name:'Thankful Teacher',cat:'Holiday Gear'},{name:'Spooky Season',cat:'Holiday Gear'},
+  {name:'Fall Feels',cat:'Seasonal Gear'},{name:'Summer Vibes',cat:'Seasonal Gear'},
+  {name:"Scout's Gear",cat:"Scout's Gear"},{name:'Cub Scout Pack 488',cat:"Scout's Gear"},
+  {name:'Camp TESSA',cat:'Groups'},{name:"Carson's Crew",cat:'Groups'},{name:'Trojan Band',cat:'Groups'},
+];
+
+const LASER_PRODUCTS=[
+  {name:'Keychain',icon:'🔑',desc:'Acrylic, wood, or leather. Personalized with name or design.',price:10},
+  {name:'Metal Tumbler',icon:'☕',desc:'20–40oz metal tumbler. Wrap or spot engrave.',price:20},
+  {name:'Ceramic Mug',icon:'🫖',desc:'Classic 11oz or 15oz ceramic mug.',price:20},
+  {name:'Small Cutting Board',icon:'🪵',desc:'Personal-sized wood cutting board.',price:25},
+  {name:'Large Cutting Board',icon:'🪵',desc:'Family-sized serving or cutting board.',price:40},
+  {name:'Dark Acrylic Ornament',icon:'✨',desc:'Dark-colored acrylic only. Custom shape & design.',price:10},
+  {name:'Nameplate / Desk Sign',icon:'🪧',desc:'Personalized desk nameplate or office sign.',price:25},
+  {name:'Jewelry Dish',icon:'💍',desc:'Engraved keepsake dish for jewelry or trinkets.',price:20},
+  {name:'Pet Tag',icon:'🐾',desc:'Durable metal pet ID or decorative tag.',price:10},
+  {name:'Badge Reel',icon:'🏷️',desc:'Retractable badge reel — great for teachers & nurses.',price:10},
+  {name:'Bookmark',icon:'📖',desc:'Engraved metal or wood bookmark.',price:5},
+  {name:'Award Plaque (Small 4×6)',icon:'🏅',desc:'Individual recognition award.',price:20},
+  {name:'Award Plaque (Med 6×8)',icon:'🏆',desc:'Team or recognition plaque.',price:30},
+  {name:'Award Plaque (Large 8×10)',icon:'🥇',desc:'Championship or group award.',price:40},
+];
+
+const PRINT_PRODUCTS=[
+  {name:'Fidget Spinner',icon:'🌀',desc:'Classic spinning fidget toy.',price:5},
+  {name:'Fidget Cube',icon:'🎲',desc:'Multi-function fidget with buttons & dials.',price:5},
+  {name:'Keychain',icon:'🔑',desc:'Custom 3D printed keychain — any shape.',price:5},
+  {name:'Name Badge',icon:'🏷️',desc:'Custom classroom or event name badge.',price:5},
+  {name:'Phone Stand',icon:'📱',desc:'Desktop phone or tablet stand.',price:15},
+  {name:'Pencil Holder',icon:'✏️',desc:'Desk organizer for classroom or office.',price:15},
+  {name:'Small Planter',icon:'🌱',desc:'Cute desktop planter for succulents.',price:15},
+  {name:'Desk Organizer',icon:'📋',desc:'Multi-compartment desk tray.',price:30},
+  {name:'Large Planter',icon:'🪴',desc:'Full-sized decorative planter.',price:30},
+  {name:'Holiday Decor',icon:'🎄',desc:'Seasonal decorative display piece.',price:30},
+];
+
+let cart=JSON.parse(localStorage.getItem('rc_v3')||'[]');
+let curD=null,curL=null,curP=null;
+let selType=null,selPrice=0,selBrand=null,selSz=null;
+let byoSz=null,byoPrice=0,byoArt=false;
+
+// ── SERVICE TABS
+function showSvc(id,el){
+  document.querySelectorAll('.service-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.service-section').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('svc-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── APPAREL
+function renderDesigns(cat){
+  const f=cat==='all'?DESIGNS:DESIGNS.filter(d=>d.cat===cat);
+  document.getElementById('section-title').textContent=cat==='all'?'All Designs':cat;
+  document.getElementById('section-count').textContent=f.length+' designs';
+  document.getElementById('design-grid').innerHTML=f.map((d,i)=>`
+    <div class="design-card" onclick="openD(${DESIGNS.indexOf(d)})" style="animation:fi .3s ease ${(i%12)*.04}s both">
+      <div class="design-img">${d.img?`<img src="${d.img}" alt="${d.name}" loading="lazy">`:`<div class="design-placeholder">${d.name}</div>`}</div>
+      <div class="design-info"><div class="design-name">${d.name}</div><div class="design-cat">${d.cat}</div><div class="design-from">From $15</div></div>
+    </div>`).join('');
+}
+function filterCat(cat,el){
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');renderDesigns(cat);
+}
+function openD(i){
+  curD=DESIGNS[i];selType=null;selPrice=0;selBrand=null;selSz=null;
+  document.getElementById('m-name').textContent=curD.name;
+  document.getElementById('m-cat').textContent=curD.cat;
+  document.getElementById('m-thumb').innerHTML=curD.img?`<img src="${curD.img}">`:`${curD.name}`;
+  document.querySelectorAll('.type-btn,.brand-btn,.sz-btn').forEach(b=>b.classList.remove('sel'));
+  ['m-color','m-cust'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-qty').value=1;
+  document.getElementById('a-total').textContent='—';
+  document.getElementById('a-break').textContent='Select shirt type';
+  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+function selType(el,t,p){document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');selType=t;selPrice=p;updA();}
+function selBrand(el,b){document.querySelectorAll('.brand-btn').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');selBrand=b;}
+function selSz(el,s){document.querySelectorAll('.sz-btn').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');selSz=s;}
+function updA(){
+  const q=parseInt(document.getElementById('m-qty').value)||1;
+  if(!selType)return;
+  document.getElementById('a-total').textContent=`$${selPrice*q}`;
+  document.getElementById('a-break').textContent=`$${selPrice} × ${q}`;
+}
+function addApparel(){
+  if(!selType){toast('Select a shirt type');return;}
+  if(!selSz){toast('Select a size');return;}
+  if(!selBrand){toast('Select a brand');return;}
+  const color=document.getElementById('m-color').value.trim();
+  if(!color){toast('Enter shirt color');return;}
+  const name=document.getElementById('m-cust').value.trim();
+  if(!name){toast('Enter your name');return;}
+  const qty=parseInt(document.getElementById('m-qty').value)||1;
+  cart.push({id:Date.now(),icon:null,label:`${curD.name} — ${selType}`,
+    detail:`${selSz} · ${selBrand} · ${color}`,name,qty,unitPrice:selPrice,total:selPrice*qty,img:curD.img||null});
+  save();closeModal();toast('✓ Added to cart!','ok');
+}
+
+// ── LASER
+function renderLaser(){
+  document.getElementById('laser-grid').innerHTML=LASER_PRODUCTS.map((p,i)=>`
+    <div class="product-card" onclick="openL(${i})" style="animation:fi .3s ease ${(i%12)*.04}s both">
+      <div class="product-img">${p.icon}</div>
+      <div class="product-info"><div class="product-name">${p.name}</div><div class="product-desc">${p.desc}</div><div class="product-price">$${p.price}</div></div>
+    </div>`).join('');
+}
+function openL(i){
+  curL=LASER_PRODUCTS[i];
+  document.getElementById('lm-thumb').textContent=curL.icon;
+  document.getElementById('lm-name').textContent=curL.name;
+  document.getElementById('lm-price').textContent=`$${curL.price} each`;
+  ['lm-text','lm-cust','lm-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('lm-qty').value=1;updL();
+  document.getElementById('lmodal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeLM(){document.getElementById('lmodal').classList.remove('open');document.body.style.overflow='';}
+function updL(){
+  if(!curL)return;
+  const q=parseInt(document.getElementById('lm-qty').value)||1;
+  document.getElementById('l-total').textContent=`$${curL.price*q}`;
+  document.getElementById('l-break').textContent=`$${curL.price} × ${q}`;
+}
+function addLaser(){
+  const name=document.getElementById('lm-cust').value.trim();
+  if(!name){toast('Enter your name');return;}
+  const qty=parseInt(document.getElementById('lm-qty').value)||1;
+  const text=document.getElementById('lm-text').value.trim();
+  const notes=document.getElementById('lm-notes').value.trim();
+  cart.push({id:Date.now(),icon:curL.icon,label:curL.name,
+    detail:`Engrave: "${text||'Design only'}"${notes?' · '+notes:''}`,
+    name,qty,unitPrice:curL.price,total:curL.price*qty});
+  save();closeLM();toast('✓ Added to cart!','ok');
+}
+
+// ── BYO LASER
+function openBYO(){
+  byoSz=null;byoPrice=0;byoArt=false;
+  document.querySelectorAll('.laser-opt').forEach(o=>o.classList.remove('sel'));
+  ['byo-text','byo-cust'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('byo-total').textContent='—';
+  document.getElementById('byo-break').textContent='Select item size above';
+  document.getElementById('byo-modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeBYO(){document.getElementById('byo-modal').classList.remove('open');document.body.style.overflow='';}
+function selBYO(el,sz,price,isArt){
+  if(isArt){
+    el.classList.toggle('sel');byoArt=el.classList.contains('sel');
+  } else {
+    document.querySelectorAll('.laser-opt:not(#art-opt)').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');byoSz=sz;byoPrice=price;
+  }
+  const t=byoPrice+(byoArt?5:0);
+  document.getElementById('byo-total').textContent=byoPrice?`$${t}`:'—';
+  document.getElementById('byo-break').textContent=byoPrice?`${byoSz}${byoArt?' + custom art':''}`:'Select item size above';
+}
+function addBYO(){
+  if(!byoSz){toast('Select item size');return;}
+  const name=document.getElementById('byo-cust').value.trim();
+  if(!name){toast('Enter your name & contact');return;}
+  const text=document.getElementById('byo-text').value.trim();
+  if(!text){toast('Enter what to engrave');return;}
+  const total=byoPrice+(byoArt?5:0);
+  cart.push({id:Date.now(),icon:'📦',label:`Engrave Your Item (${byoSz})`,
+    detail:`"${text}"${byoArt?' + custom art':''}`,name,qty:1,unitPrice:total,total});
+  save();closeBYO();toast('✓ Added to cart!','ok');
+}
+
+// custom request functions defined below with backend integration
+
+// ── 3D PRINTING
+function renderPrint(){
+  document.getElementById('print-grid').innerHTML=PRINT_PRODUCTS.map((p,i)=>`
+    <div class="product-card" onclick="openP(${i})" style="animation:fi .3s ease ${(i%12)*.04}s both">
+      <div class="product-img">${p.icon}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div><div class="product-desc">${p.desc}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.3rem">
+          <div class="product-price">$${p.price}</div>
+          <span style="font-size:.65rem;background:var(--lgray);color:var(--gray);padding:.12rem .45rem;border-radius:8px">${p.price===5?'Small':p.price===15?'Medium':'Large'}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function sel3D(el,sz,price){
+  document.querySelectorAll('.size-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function openP(i){
+  curP=PRINT_PRODUCTS[i];
+  document.getElementById('pm-thumb').textContent=curP.icon;
+  document.getElementById('pm-name').textContent=curP.name;
+  document.getElementById('pm-price').textContent=`$${curP.price} each`;
+  ['pm-color','pm-cust','pm-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pm-qty').value=1;updP();
+  document.getElementById('pmodal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closePM(){document.getElementById('pmodal').classList.remove('open');document.body.style.overflow='';}
+function updP(){
+  if(!curP)return;
+  const q=parseInt(document.getElementById('pm-qty').value)||1;
+  document.getElementById('p-total').textContent=`$${curP.price*q}`;
+  document.getElementById('p-break').textContent=`$${curP.price} × ${q}`;
+}
+function openFidget(){
+  curP={name:'Fidget Bundle (Any 3)',icon:'🎯',price:20};
+  document.getElementById('pm-thumb').textContent='🎯';
+  document.getElementById('pm-name').textContent='Fidget Bundle — Any 3';
+  document.getElementById('pm-price').textContent='$20 for 3 fidgets';
+  ['pm-color','pm-cust','pm-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pm-qty').value=1;
+  document.getElementById('p-total').textContent='$20';
+  document.getElementById('p-break').textContent='Mix & match 3 styles';
+  document.getElementById('pmodal').classList.add('open');document.body.style.overflow='hidden';
+}
+function addPrint(){
+  const name=document.getElementById('pm-cust').value.trim();
+  if(!name){toast('Enter your name');return;}
+  const qty=parseInt(document.getElementById('pm-qty').value)||1;
+  const color=document.getElementById('pm-color').value.trim();
+  const notes=document.getElementById('pm-notes').value.trim();
+  cart.push({id:Date.now(),icon:curP.icon,label:curP.name,
+    detail:`Color: ${color||'No preference'}${notes?' · '+notes:''}`,
+    name,qty,unitPrice:curP.price,total:curP.price*qty});
+  save();closePM();toast('✓ Added to cart!','ok');
+}
+
+// ── BACKEND ───────────────────────────────────────────────
+const SCRIPT_URL = localStorage.getItem('rc_script_url') || '';
+
+async function postToBackend(payload) {
+  if (!SCRIPT_URL) return null;
+  try {
+    const resp = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'text/plain' }, // GAS requires text/plain for doPost
+    });
+    return await resp.json();
+  } catch(e) {
+    console.warn('Backend post failed:', e.message);
+    return null;
+  }
+}
+
+// ── CART
+function save(){localStorage.setItem('rc_v3',JSON.stringify(cart));updBadge();renderCart();}
+function updBadge(){document.getElementById('cart-count').textContent=cart.reduce((s,i)=>s+i.qty,0);}
+function renderCart(){
+  const c=document.getElementById('cart-items');
+  if(!cart.length){
+    c.innerHTML=`<div class="cart-empty"><div style="font-size:2.5rem;margin-bottom:.5rem">🛍</div><p>Your cart is empty</p></div>`;
+    document.getElementById('co-btn').disabled=true;
+    document.getElementById('cart-total').textContent='$0';return;
+  }
+  document.getElementById('co-btn').disabled=false;
+  const total=cart.reduce((s,i)=>s+i.total,0);
+  document.getElementById('cart-total').textContent=`$${total}`;
+  c.innerHTML=cart.map(item=>`
+    <div class="cart-item">
+      <div class="ci-thumb">${item.img?`<img src="${item.img}">`:(item.icon||item.label)}</div>
+      <div class="ci-info">
+        <div class="ci-name">${item.label}</div>
+        <div class="ci-detail">${item.detail}<br>For: ${item.name}</div>
+        <button class="ci-remove" onclick="removeItem(${item.id})">Remove</button>
+      </div>
+      <div class="ci-price">$${item.total}</div>
+    </div>`).join('');
+}
+function removeItem(id){cart=cart.filter(i=>i.id!==id);save();}
+function openCart(){renderCart();document.getElementById('cart-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('cart-overlay').classList.remove('open');document.body.style.overflow='';}
+
+async function goCheckout(){
+  if(!cart.length)return;
+  const email = document.getElementById('checkout-email').value.trim();
+  const total = cart.reduce((s,i)=>s+i.total,0);
+
+  // Disable button while processing
+  const btn = document.getElementById('co-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Processing…';
+
+  // POST order to Apps Script backend
+  const result = await postToBackend({
+    type: 'order',
+    customerEmail: email,
+    items: cart,
+  });
+
+  const orderNum = result?.orderNum || ('RC-' + Date.now().toString().slice(-6));
+
+  // Save locally
+  localStorage.setItem('rc_pending', JSON.stringify({
+    items: cart, total, orderNum,
+    customerEmail: email,
+    date: new Date().toISOString()
+  }));
+
+  // Clear cart
+  cart = []; save(); closeCart();
+
+  // Show confirmation toast with order number
+  if (result?.orderNum) {
+    toast(`✓ Order ${orderNum} confirmed! Check your email.`, 'ok');
+  } else {
+    toast(`Redirecting to payment — $${total}…`);
+  }
+
+  // Redirect to Square after brief delay
+  setTimeout(() => window.open('https://square.link/u/18FbtiRu', '_blank'), 1200);
+
+  btn.disabled = false;
+  btn.textContent = 'Proceed to Payment →';
+}
+
+// ── CUSTOM REQUESTS
+async function submitLaserRequest(){
+  const n=document.getElementById('lc-name').value.trim();
+  const c=document.getElementById('lc-contact').value.trim();
+  const t=document.getElementById('lc-type').value;
+  const d=document.getElementById('lc-desc').value.trim();
+  if(!n||!c||!t||!d){toast('Please fill in all fields');return;}
+
+  const btn = event.target;
+  btn.textContent = '⏳ Sending…'; btn.disabled = true;
+
+  await postToBackend({
+    type: 'custom_request',
+    requestType: 'Laser Engraving',
+    name: n, contact: c, itemType: t, description: d
+  });
+
+  toast('✓ Request sent! We\'ll be in touch soon.','ok');
+  ['lc-name','lc-contact','lc-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('lc-type').selectedIndex=0;
+  btn.textContent = 'Send Request →'; btn.disabled = false;
+}
+
+async function submitPrintRequest(){
+  const n=document.getElementById('pc-name').value.trim();
+  const c=document.getElementById('pc-contact').value.trim();
+  const sz=document.getElementById('pc-size').value;
+  const d=document.getElementById('pc-desc').value.trim();
+  if(!n||!c||!d){toast('Please fill in all fields');return;}
+
+  const btn = event.target;
+  btn.textContent = '⏳ Sending…'; btn.disabled = true;
+
+  await postToBackend({
+    type: 'custom_request',
+    requestType: '3D Printing',
+    name: n, contact: c, itemType: sz, description: d
+  });
+
+  toast('✓ Request sent! We\'ll be in touch soon.','ok');
+  ['pc-name','pc-contact','pc-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pc-size').selectedIndex=0;
+  btn.textContent = 'Send Request →'; btn.disabled = false;
+}
+
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`show ${type}`;
+  setTimeout(()=>el.className='',2800);
+}
+const s=document.createElement('style');
+s.textContent='@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(s);
+
+// Load script URL from admin settings if set
+const savedUrl = localStorage.getItem('rc_script_url');
+if (savedUrl) console.log('Backend connected:', savedUrl);
+
+renderDesigns('all');renderLaser();renderPrint();updBadge();
+</script>
+</body>
+</html>
