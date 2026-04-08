@@ -583,20 +583,30 @@ function connectBackend() {
   syncAll();
 }
 
-function jsonpCall(url, callback) {
+function jsonpCall(baseUrl, action) {
   const cbName = 'rc_admin_cb_' + Date.now();
+  // Build URL correctly — always use ? since /exec has no existing params
+  const url = `${baseUrl}?action=${action}&callback=${cbName}`;
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      delete window[cbName]; script.remove();
-      reject(new Error('Request timed out'));
+      delete window[cbName];
+      if (script.parentNode) script.remove();
+      reject(new Error('Request timed out — make sure your script is deployed as "Anyone" can access'));
     }, 12000);
     window[cbName] = (data) => {
-      clearTimeout(timeout); delete window[cbName]; script.remove();
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.remove();
       resolve(data);
     };
     const script = document.createElement('script');
-    script.src = `${url}&callback=${cbName}`;
-    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('Failed')); };
+    script.src = url;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.remove();
+      reject(new Error('Script load failed — check deployment settings'));
+    };
     document.head.appendChild(script);
   });
 }
@@ -605,36 +615,52 @@ async function syncAll() {
   if (!scriptUrl) return;
   document.getElementById('conn-status').textContent = '⏳ Syncing…';
   try {
-    // Ping
-    const ping = await jsonpCall(`${scriptUrl}?action=ping`);
-    if (ping.status !== 'ok') throw new Error(ping.error || 'Failed');
+    // Ping first to confirm connection
+    const ping = await jsonpCall(scriptUrl, 'ping');
+    if (ping.status !== 'ok') throw new Error(ping.error || 'Ping failed');
 
-    // Load orders
-    const od = await jsonpCall(`${scriptUrl}?action=list_orders`);
-    if (od.orders) { orders = od.orders; localStorage.setItem('rc_admin_orders', JSON.stringify(orders)); }
+    // Load all data in parallel for speed
+    const [od, dd, ld, pd, rd] = await Promise.all([
+      jsonpCall(scriptUrl, 'list_orders'),
+      jsonpCall(scriptUrl, 'list_designs'),
+      jsonpCall(scriptUrl, 'list_laser'),
+      jsonpCall(scriptUrl, 'list_print'),
+      jsonpCall(scriptUrl, 'list_requests'),
+    ]);
 
-    // Load designs
-    const dd = await jsonpCall(`${scriptUrl}?action=list_designs`);
-    if (dd.designs && dd.designs.length) { designs = dd.designs.map(d => ({name:d.Name||d.name,cat:d.Category||d.cat,img:d['Image URL']||d.img||'',active:d.Active!==false})); localStorage.setItem('rc_admin_designs', JSON.stringify(designs)); }
-
-    // Load laser
-    const ld = await jsonpCall(`${scriptUrl}?action=list_laser`);
-    if (ld.products && ld.products.length) { laserProds = ld.products.map(p=>({name:p.Name||p.name,icon:p.Icon||p.icon,desc:p.Description||p.desc,price:parseFloat(p.Price||p.price)||0,active:p.Active!==false})); localStorage.setItem('rc_admin_laser', JSON.stringify(laserProds)); }
-
-    // Load print
-    const pd = await jsonpCall(`${scriptUrl}?action=list_print`);
-    if (pd.products && pd.products.length) { printProds = pd.products.map(p=>({name:p.Name||p.name,icon:p.Icon||p.icon,desc:p.Description||p.desc,price:parseFloat(p.Price||p.price)||0,size:p['Size Category']||p.size,active:p.Active!==false})); localStorage.setItem('rc_admin_print', JSON.stringify(printProds)); }
-
-    // Load requests
-    const rd = await jsonpCall(`${scriptUrl}?action=list_requests`);
+    if (od.orders)  { orders = od.orders; localStorage.setItem('rc_admin_orders', JSON.stringify(orders)); }
+    if (dd.designs && dd.designs.length) {
+      designs = dd.designs.map(d => ({
+        name: d.Name||d.name, cat: d.Category||d.cat,
+        img: d['Image URL']||d.img||'', active: d.Active!==false
+      }));
+      localStorage.setItem('rc_admin_designs', JSON.stringify(designs));
+    }
+    if (ld.products && ld.products.length) {
+      laserProds = ld.products.map(p => ({
+        name: p.Name||p.name, icon: p.Icon||p.icon,
+        desc: p.Description||p.desc, price: parseFloat(p.Price||p.price)||0,
+        active: p.Active!==false
+      }));
+      localStorage.setItem('rc_admin_laser', JSON.stringify(laserProds));
+    }
+    if (pd.products && pd.products.length) {
+      printProds = pd.products.map(p => ({
+        name: p.Name||p.name, icon: p.Icon||p.icon,
+        desc: p.Description||p.desc, price: parseFloat(p.Price||p.price)||0,
+        size: p['Size Category']||p.size, active: p.Active!==false
+      }));
+      localStorage.setItem('rc_admin_print', JSON.stringify(printProds));
+    }
     if (rd.requests) { requests = rd.requests; localStorage.setItem('rc_admin_requests', JSON.stringify(requests)); }
 
     document.getElementById('conn-status').innerHTML = '<span style="color:#6FE082">✅ Connected & synced!</span>';
-    renderDesignGrid(); renderLaserTable(); renderPrintTable(); renderOrderTable(); renderRequestTable(); updateDashStats();
-    toast('Synced with backend!','ok');
+    renderDesignGrid(); renderLaserTable(); renderPrintTable();
+    renderOrderTable(); renderRequestTable(); updateDashStats();
+    toast('Synced with backend!', 'ok');
   } catch(err) {
     document.getElementById('conn-status').innerHTML = `<span style="color:#FF6B6B">❌ ${err.message}</span>`;
-    toast('Sync failed — check URL','err');
+    toast('Sync failed — ' + err.message, 'err');
   }
 }
 
